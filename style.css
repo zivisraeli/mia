@@ -1,47 +1,158 @@
-body,
-html,
-img {
-  width: 100%;
-  height: 100%;
-}
-
 body {
-  background-position: center;
-  background: url(indexStartup1.jpg) no-repeat center center fixed;
-  background-size: cover;
-  height: 100%
+  font-family: "calibri";
+  background-color: #ebebeb;
+  margin: 0;
 }
 
+/* font size depends on the viewport width */
 h1 {
-  font-size: 2rem;
-  color: white;
-  text-transform:  uppercase;
-}
-hr {
-  border-color: #F05F44;
-  max-width: 65px;
+  font-size: 4vw;
+  margin: 10px;
 }
 
-.buffer {
-  height: 5rem;
+/*
+  - flex so elements follow each other horizontally. later on - vertically.
+  - fixed position makes the header "sticky"
+  - width of the entire screen
+  - height property makes it responsive up to min of 50px
+*/
+header {
+  display: flex;
+  align-items: center;
+  position: fixed;
+  top: 0;
+  background-color: orange;
+  font-size: 1.5em;
+  border-top: 1px solid black;
+  border-bottom: 1px solid black;
+  width: 100%;
+  height: 14vh;
+  min-height: 100px;
 }
 
-.btn {
-  font-weight: 700;
-  border-radius: 300px;
-  text-transform:  uppercase;
+@media screen and (max-width: 900px) {
+  herader {
+    flex-direction: column;
+    justify-content: center;
+  }
 }
 
-.btn-primary {
-  background-color: #F05F44;
-  border-color: #F05F44;
-}
-.btn-primary:hover {
-  background-color: #ee4b08;
-  border-color: #ee4b08;
-  border-width: 4px;
+/*
+  - border-radius makes the image round. 
+*/
+.header-img {
+  width: 100px;
+  border: 1px solid black;
+  border-radius: 50%;
+  margin-left: 50px;
 }
 
-.btn-xl {
-  padding: 1rem 2rem;
+/*
+  - flex would allow me later on to arrange them vertically.
+  - margin-left:auto;  would push the element all the way to the right. 
+  - "auto" : taking up available space!!!!!!
+  - the 100% height would strech the div element to the height of its container.
+  - under 600px flex elements are vertically ordered and centered through margin property.
+*/
+.nav {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 25px;
+  margin-left: auto;
+  height: 100%;
+
+}
+
+@media screen and (max-width: 900px) {
+  .nav {
+    flex-direction: column;
+    margin: auto;
+  }
+}
+
+/* 
+  - no underline 
+  - font size depends on the viewport width 
+*/
+.nav a {
+  text-decoration: none;
+  font-size: 3vw;
+  padding-left: 10px;
+  padding-right: 10px;
+  color: black;
+  height: auto;
+}
+
+@media screen and (max-width: 900px) {
+  .nav a {
+    font-size: 4vw;
+    padding: 5px;
+  }
+}
+
+.nav a:hover {
+  background-color: white;
+  color: orange;
+}
+
+/* 
+  - height is equal to overall viewport height 
+*/
+.about-section {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 100vh;
+
+}
+
+.about-section img {
+  border: 1px groove black;
+}
+
+.hobbies-section {
+  margin-left: 50px;
+  margin-right: 50px;
+
+}
+
+/*
+  - grid-template-columns: auto auto auto 
+  - fr unit is grid specifc. fraction. The item would grow and shrink basd on the available space.
+  - repeat function would repeat a pattern i.e. repeat(3, 1fr); instead of 1fr 1fr 1fr;
+  - auto-fit can be used with repeat() in order to avoid  specifiying a fix number of columns.
+  - minmax function defines the range i.e. from 320px to 1fr
+  - grid-gap would set gap between items 
+*/
+.hobbies-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  grid-gap: 2rem;
+  justify-content: space-evenly;
+}
+
+.hobbies-grid a {
+  transition: all 0.2s ease-in-out;
+}
+
+.grid-item {
+  background-color: #f5aa42;
+  border: 1px solid black;
+  border-radius: 5px;
+  padding: 10px;
+  font-size: 30px;
+  text-align: center;
+}
+
+/* 
+  - would transition all properties that their valued changed (trans, color, shadow)
+*/
+.grid-item:hover {
+  transition: all 0.5s ease-in-out;
+  transform: scale(1.1);
+  background-color: #ffa500;
+  box-shadow: 10px 10px 5px rgba(0, 0, 0, 0.33);
 }
