@@ -180,3 +180,7 @@ function setCookie(name, value, days) {
     d.setTime(d.getTime() + 24*60*60*1000*days);
     document.cookie = name + "=" + value + ";path=/;expires=" + d.toGMTString();
 }
+
+setCookie("ziv", "israeli", 100);
+let myCookie = getCookie("ziv");
+alert(myCookie);
