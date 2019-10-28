@@ -141,10 +141,10 @@ toggleHeart = (event) => {
   if (gridItem.isLiked) {
     likeArray.push(gridItem.id);
   } else {
-    let newArray = likeArray.filter((elem) => {
-      return elem.id != gridItem.id;
+    let filteredArray = likeArray.filter((id) => {
+      return id != gridItem.id;
     });
-    likeArray = newArray;
+    likeArray = filteredArray;
   }
 
   likeCookie = JSON.stringify(likeArray);
