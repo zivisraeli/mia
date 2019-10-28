@@ -41,7 +41,7 @@ makeGrid = () => {
     likeArray = JSON.parse(likeCookie);
   }
   likeArray.forEach((id) => {
-      let gridElem = gridItem.find((elem) => {
+      let gridElem = gridItems.find((elem) => {
         return elem.id === id;
       });
       if (gridElem != null) {
