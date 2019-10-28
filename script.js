@@ -34,6 +34,22 @@ let gridItems = [
 ];
 
 makeGrid = () => {
+  // read 'likes' cookie
+  likeArray = [];
+  let likeCookie = getCookie('likes');
+  if (likeCookie != null) {
+    likeArray = JSON.parse(likeCookie);
+  }
+  likeArray.forEach((id) => {
+      let gridElem = gridItem.find((elem) => {
+        return elem.id === id;
+      });
+      if (gridElem != null) {
+        gridElem.isLiked = true;
+      }
+  });
+
+
   // the grid container
   let theGrid = document.querySelector(".the-grid");
   theGrid.innerHTML = '';
@@ -114,22 +130,23 @@ toggleHeart = (event) => {
 
   // 1. get 'likes' cookie (a string)
   // 2. if not empty, JSON-parse it to convert the string to an array. 
-  // 3. push or remove (filter) an element
+  // 3. push or remove (filter) an element based on gridItem.isLiked value.
   // 4. JSON-stringify it to convert the array to a string. 
   // 5. set the cookie with the new string.
   let likeArray = [];
   let likeCookie = getCookie('likes');
   if (likeCookie != null) {
-    if (gridItem.isLiked) {
-      likeArray = JSON.parse(likeCookie);
-    } else {
-      let newArray = likeArray.filter((elem) => {
-        return elem.id != gridItem.id;
-      });
-      likeArray = newArray;
-    }
+    likeArray = JSON.parse(likeCookie);
   }
-  likeArray.push(gridItem.id);
+  if (gridItem.isLiked) {
+    likeArray.push(gridItem.id);
+  } else {
+    let newArray = likeArray.filter((elem) => {
+      return elem.id != gridItem.id;
+    });
+    likeArray = newArray;
+  }
+
   likeCookie = JSON.stringify(likeArray);
   setCookie('likes', likeCookie);
 }
