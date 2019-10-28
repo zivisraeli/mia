@@ -1,6 +1,6 @@
 class Item {
-  constructor(date) {
-    this.date = date;
+  constructor(id) {
+    this.id = id;
   }
 }
 
@@ -8,27 +8,29 @@ class Item {
 // Grid Creation
 // ==========================================================================
 class GridItem extends Item {
-  constructor(src, caption, date, likeCount, isLiked) {
-    super(date);
+  constructor(id, src, caption, date, likeCount, isLiked) {
+    super(id);
     this.src = src;
     this.caption = caption;
+    this.date = date;
     this.likeCount = likeCount;
     this.isLiked = isLiked;
   }
 }
 
 let gridItems = [
-  new GridItem("images/miaTry1-600.jpg", "dMia in the park", "09/18/2019", 25, false),
-  new GridItem("images/miaTry2-450.jpg", "cMia in the park", "09/18/2019", 5, false),
-  new GridItem("images/miaTry3-400.jpg", "wMia in the park", "09/18/2019", 17, false),
-  new GridItem("images/miaTry1-600.jpg", "aMia in the park", "09/18/2019", 2, false),
-  new GridItem("images/miaTry2-450.jpg", "aMia in the park", "09/18/2019", 5, false),
-  new GridItem("images/miaTry3-400.jpg", "hMia in the park", "09/18/2019", 9, false),
-  new GridItem("images/miaTry1-600.jpg", "dMia in the park", "09/18/2019", 13, false),
-  new GridItem("images/miaTry2-450.jpg", "Mia in the park", "09/18/2019", 11, false),
-  new GridItem("images/miaTry3-400.jpg", "jMia in the park", "09/18/2019", 12, false),
-  new GridItem("images/miaTry1-600.jpg", "lMia in the park", "09/18/2019", 5, false),
-  new GridItem("images/miaTry2-450.jpg", "zMia in the park", "09/18/2019", 15, false),
+  new GridItem("id0", "images/miaTry2-450.jpg", "zMia in the park", "09/18/2019", 15, false),
+  new GridItem("id1", "images/miaTry1-600.jpg", "dMia in the park", "09/18/2019", 25, false),
+  new GridItem("id2", "images/miaTry2-450.jpg", "cMia in the park", "09/18/2019", 5, false),
+  new GridItem("id3", "images/miaTry3-400.jpg", "wMia in the park", "09/18/2019", 17, false),
+  new GridItem("id4", "images/miaTry1-600.jpg", "aMia in the park", "09/18/2019", 2, false),
+  new GridItem("id5", "images/miaTry2-450.jpg", "aMia in the park", "09/18/2019", 5, false),
+  new GridItem("id6", "images/miaTry3-400.jpg", "hMia in the park", "09/18/2019", 9, false),
+  new GridItem("id7", "images/miaTry1-600.jpg", "dMia in the park", "09/18/2019", 13, false),
+  new GridItem("id8", "images/miaTry2-450.jpg", "Mia in the park", "09/18/2019", 11, false),
+  new GridItem("id9", "images/miaTry3-400.jpg", "jMia in the park", "09/18/2019", 12, false),
+  new GridItem("id10", "images/miaTry1-600.jpg", "lMia in the park", "09/18/2019", 5, false),
+  new GridItem("id11", "images/miaTry2-450.jpg", "zMia in the park", "09/18/2019", 15, false),
 ];
 
 makeGrid = () => {
@@ -37,6 +39,7 @@ makeGrid = () => {
   theGrid.innerHTML = '';
 
   gridItems.forEach((elem, i) => {
+    let id = elem.id;
     let src = elem.src;
     let caption = elem.caption;
     let likeCount = elem.likeCount;
@@ -53,7 +56,7 @@ makeGrid = () => {
                      <img src="images/heartMid2.jpg" style="width:15px"/>\'s&nbsp;|&nbsp;
                      ${date}&nbsp;
          </figcaption>
-         <img class="heart" id="h${i}" src=${heartImg} style="width:15px"/>
+         <img class="heart" id="${id}" src=${heartImg} style="width:15px"/>
        </figure>`;
   });
 
@@ -85,30 +88,50 @@ toggleHeart = (event) => {
   // Get the target element (one with the class="heart")
   let theTarget = document.getElementById(event.target.id);
 
-  // Get the target id, and based on the isLiked value:
+  // Based on the target id, find the element in the gridItems and:
   //   - increment or decrement the likeCount.
   //   - toggle the isLiked value.
   //   - render the right icon.
-  let elemIndex = event.target.id.substring(1);
-  if (gridItems[elemIndex].isLiked) {
-    gridItems[elemIndex].likeCount--;
-    gridItems[elemIndex].isLiked = false;
+  let gridItem = gridItems.find((obj) => {
+    return obj.id === event.target.id;
+  });
+
+  if (gridItem.isLiked) {
+    gridItem.isLiked = false;
+    gridItem.likeCount--;
     theTarget.setAttribute("src", "images/heartOutline1.png");
   } else {
-    gridItems[elemIndex].likeCount++;
-    gridItems[elemIndex].isLiked = true;
+    gridItem.isLiked = true;
+    gridItem.likeCount++;
     theTarget.setAttribute("src", "images/heartMid3.jpg");
   }
 
-  // render the like count.
+  // re-render the like count.
   // we grab the parent (figure tag) from which we query for the like-count-span.
   let parentElem = theTarget.parentElement;
   let countElem = parentElem.querySelector("#like-count-span");
-  countElem.innerHTML = gridItems[elemIndex].likeCount;
+  countElem.innerHTML = gridItem.likeCount;
 
-  document.cookie = "ziv=israeli"
-  let mycookie = document.cookie;
-  console.log(mycookie);
+  // 1. get 'likes' cookie (a string)
+  // 2. if not empty, JSON-parse it to convert the string to an array. 
+  // 3. push or remove (filter) an element
+  // 4. JSON-stringify it to convert the array to a string. 
+  // 5. set the cookie with the new string.
+  let likeArray = [];
+  let likeCookie = getCookie('likes');
+  if (likeCookie != null) {
+    if (gridItem.isLiked) {
+      likeArray = JSON.parse(likeCookie);
+    } else {
+      let newArray = likeArray.filter((elem) => {
+        return elem.id != gridItem.id;
+      });
+      likeArray = newArray;
+    }
+  }
+  likeArray.push(gridItem.id);
+  likeCookie = JSON.stringify(likeArray);
+  setCookie('likes', likeCookie);
 }
 
 // ==========================================================================
@@ -172,15 +195,12 @@ makeGrid();
 
 
 function getCookie(name) {
-    var v = document.cookie.match('(^|;) ?' + name + '=([^;]*)(;|$)');
-    return v ? v[2] : null;
-}
-function setCookie(name, value, days) {
-    var d = new Date;
-    d.setTime(d.getTime() + 24*60*60*1000*days);
-    document.cookie = name + "=" + value + ";path=/;expires=" + d.toGMTString();
+  var v = document.cookie.match('(^|;) ?' + name + '=([^;]*)(;|$)');
+  return v ? v[2] : null;
 }
 
-setCookie("ziv", "israeli", 100);
-let myCookie = getCookie("ziv");
-alert(myCookie);
+function setCookie(name, value, days = 365) {
+  let d = new Date;
+  d.setTime(d.getTime() + 24 * 60 * 60 * 1000 * days);
+  document.cookie = name + "=" + value + ";path=/;expires=" + d.toGMTString();
+}
