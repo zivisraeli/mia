@@ -46,6 +46,7 @@ makeGrid = () => {
       });
       if (gridElem != null) {
         gridElem.isLiked = true;
+        gridElem.likeCount++;
       }
   });
 
