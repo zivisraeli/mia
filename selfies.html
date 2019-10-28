@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>CURRENT Ziv's Persona Portflio</title>
+  <link rel="stylesheet" type="text/css" href="style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.7.2/animate.min.css">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Oswald">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Abel">
+</head>
+
+<body>
+  <header>
+    <img src="images/miaHeadshot.jpg" class="header-img">
+    <nav id="navbar">
+      <a href="index.html">About</a>
+      <a href="images.html">Selfies</a>
+      <a href="images.html">With Friends</a>
+      <a href="contact.html">Fan Club</a>
+    </nav>
+  </header>
+  <main>
+    <section id="grid-section" class="grid-section">
+      <span>These are some of my best selfies</span><br>
+      <span>Click on the image for a larger view.</span>
+      <div id="select-div">
+        <select id="select-sort">
+        	<option disabled selected value>Sort Images By...</option>
+          <option>Like number; Asc.</option>
+          <option>Like number; Desc.</option>
+          <option>Caption; Asc.</option>
+          <option>Caption; Desc.</option>
+        </select>
+      </div>
+      <div class="the-grid">
+      </div>
+    </section>
+  </main>
+  <footer>
+    Here I would place all footer shit
+  </footer>
+  <!-- The Modal -->
+  <div id="imgModal" class="modal">
+    <div class="modal-content">
+      <span class="closeModalBtn">&times;</span>
+      <img src="images/mia13.jpg" />
+    </div>
+  </div>
+</body>
+<script type="text/javascript" src="data.json"></script>
+<script type="text/javascript" src="script.js"></script>
+
+</html>
