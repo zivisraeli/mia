@@ -15,23 +15,30 @@
     <nav id="navbar">
       <a href="index.html">About</a>
       <a href="images.html">Selfies</a>
-      <a href="images.html">With Friends</a>
       <a href="contact.html">Fan Club</a>
     </nav>
   </header>
   <main>
     <section id="grid-section" class="grid-section">
-      <span>These are some of my best selfies</span><br>
-      <span>Click on the image for a larger view.</span>
-      <div id="select-div">
-        <select id="select-sort">
-        	<option disabled selected value>Sort Images By...</option>
-          <option>Like number; Asc.</option>
-          <option>Like number; Desc.</option>
-          <option>Caption; Asc.</option>
-          <option>Caption; Desc.</option>
-        </select>
+      <span id="title">Some of my best selfies!</span>
+      <div>
+        <ul>
+          <li>
+            Sort Images By:
+            <div id="select-div">
+              <select id="select-sort">
+                <option>Like number; Asc.</option>
+                <option>Like number; Desc.</option>
+                <option>Caption; Asc.</option>
+                <option>Caption; Desc.</option>
+              </select>
+            </div>
+          </li>
+          <li>Click on the image for a larger view.</li>
+          <li>Click on the heart icon if you really like the image!</li>
+        </ul>
       </div>
+      <hr>
       <div class="the-grid">
       </div>
     </section>

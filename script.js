@@ -4,9 +4,6 @@ class Item {
   }
 }
 
-// ==========================================================================
-// Grid Creation
-// ==========================================================================
 class GridItem extends Item {
   constructor(id, src, caption, date, likeCount, isLiked) {
     super(id);
@@ -33,25 +30,14 @@ let gridItems = [
   new GridItem("id11", "images/miaTry2-450.jpg", "zMia in the park", "09/18/2019", 15, false),
 ];
 
+// ==========================================================================
+// Grid Creation
+// ==========================================================================
 makeGrid = () => {
-  // read 'likes' cookie
-  likeArray = [];
-  let likeCookie = getCookie('likes');
-  if (likeCookie != null) {
-    likeArray = JSON.parse(likeCookie);
-  }
-  likeArray.forEach((id) => {
-      let gridElem = gridItems.find((elem) => {
-        return elem.id === id;
-      });
-      if (gridElem != null) {
-        gridElem.isLiked = true;
-        gridElem.likeCount++;
-      }
-  });
+  // read 'likes' cookie and update the gridItems array accordingly.
+  readLikesCookie();
 
-
-  // the grid container
+  // loop through the gridItems array and construct the grid.
   let theGrid = document.querySelector(".the-grid");
   theGrid.innerHTML = '';
 
@@ -78,7 +64,7 @@ makeGrid = () => {
   });
 
   // ==========================================================================
-  // Events for the grid elements must be re-created everytime the grid is rendered.
+  // Events for the grid elements must be re-created everytime the grid is rendered after sorting.
   // - Get the grid item that opens the modal
   // - When the user clicks on an grid item, either:
   //    - he clicked on the heart icon - toggle it.
@@ -129,27 +115,7 @@ toggleHeart = (event) => {
   let countElem = parentElem.querySelector("#like-count-span");
   countElem.innerHTML = gridItem.likeCount;
 
-  // 1. get 'likes' cookie (a string)
-  // 2. if not empty, JSON-parse it to convert the string to an array. 
-  // 3. push or remove (filter) an element based on gridItem.isLiked value.
-  // 4. JSON-stringify it to convert the array to a string. 
-  // 5. set the cookie with the new string.
-  let likeArray = [];
-  let likeCookie = getCookie('likes');
-  if (likeCookie != null) {
-    likeArray = JSON.parse(likeCookie);
-  }
-  if (gridItem.isLiked) {
-    likeArray.push(gridItem.id);
-  } else {
-    let filteredArray = likeArray.filter((id) => {
-      return id != gridItem.id;
-    });
-    likeArray = filteredArray;
-  }
-
-  likeCookie = JSON.stringify(likeArray);
-  setCookie('likes', likeCookie);
+  updateLikesCookie(gridItem);
 }
 
 // ==========================================================================
@@ -209,16 +175,67 @@ window.onclick = function(event) {
   }
 }
 
-makeGrid();
-
-
-function getCookie(name) {
-  var v = document.cookie.match('(^|;) ?' + name + '=([^;]*)(;|$)');
-  return v ? v[2] : null;
+// ==========================================================================
+// cookie related functions
+// ==========================================================================
+getCookie = name => {
+  // since document.cookie returns all cookie, match would filter out the one I need.
+  // the match uses group-match feature
+  let value = document.cookie.match('(^|;) ?' + name + '=([^;]*)(;|$)');
+  return value ? v[2] : null;
 }
 
-function setCookie(name, value, days = 365) {
+setCookie = (name, value, days = 365) => {
   let d = new Date;
   d.setTime(d.getTime() + 24 * 60 * 60 * 1000 * days);
   document.cookie = name + "=" + value + ";path=/;expires=" + d.toGMTString();
 }
+
+// ==========================================================================
+// readLikesCookie would read 'likes' cookie and update the gridItems array accordingly. 
+// ==========================================================================
+readLikesCookie = () => {
+  // read 'likes' cookie
+  likeArray = [];
+  let likeCookie = getCookie('likes');
+  if (likeCookie != null) {
+    likeArray = JSON.parse(likeCookie);
+  }
+  likeArray.forEach((id) => {
+    let gridElem = gridItems.find((elem) => {
+      return elem.id === id;
+    });
+    if (gridElem != null) {
+      gridElem.isLiked = true;
+      gridElem.likeCount++;
+    }
+  });
+}
+
+// ==========================================================================
+// 1. get 'likes' cookie (a string)
+// 2. if not empty, JSON-parse it to convert the string to an array. 
+// 3. push or remove (filter) an element based on gridItem.isLiked value.
+// 4. JSON-stringify it to convert the array to a string. 
+// 5. set the cookie with the new string.
+// ==========================================================================
+updateLikesCookie = (gridItem) => {
+  let likeArray = [];
+  let likeCookie = getCookie('likes');
+  if (likeCookie != null) {
+    likeArray = JSON.parse(likeCookie);
+  }
+  if (gridItem.isLiked) {
+    likeArray.push(gridItem.id);
+  } else {
+    let filteredArray = likeArray.filter((id) => {
+      return id != gridItem.id;
+    });
+    likeArray = filteredArray;
+  }
+
+  likeCookie = JSON.stringify(likeArray);
+  setCookie('likes', likeCookie);
+}
+
+makeGrid();
