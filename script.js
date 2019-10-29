@@ -126,16 +126,16 @@ mySelect.onchange = (event) => {
   var inputText = event.target.value;
   var ind = event.target.selectedIndex;
   switch (ind) {
-    case 1:
+    case 0:
       sortGridItems('likes', 1);
       break;
-    case 2:
+    case 1:
       sortGridItems('likes', -1);
       break;
-    case 3:
+    case 2:
       sortGridItems('captions', 1);
       break;
-    case 4:
+    case 3:
       sortGridItems('captions', -1);
       break;
     default:

@@ -1,5 +1,5 @@
+/* by default, the browser sets some marging. I eliminate it. */
 body {
-  font-family: "Oswald";
   background-color: #ebebeb;
   margin: 0;
 }
@@ -8,16 +8,17 @@ body {
   - using flex so elements follow each other horizontally. later on - vertically.
   - sticky position is preferable over fixed since it keeps the element part of the flow. 
   - width of the entire screen
-  - z-index will make it on top of any other element
+  - z-index will make it on top of any other element (the position property removes it from the normal flow.)
 ========================================================================== */
 header {
   display: flex;
   position: sticky;
   top: 0;
   background: linear-gradient(to right, orange, yellow);
+  font-family: Oswald;
   font-size: 1.5em;
-  border-top: 1px solid black;
-  border-bottom: 1px solid black;
+  border-top: 1px solid gray;
+  border-bottom: 1px solid gray;
   width: 100%;
   height: 110px;
   z-index: 1;
@@ -102,76 +103,89 @@ nav a:hover {
   }
 }
 
-/* ========================================================================== 
-About Section
-  - height is equal to 65% of the overall viewport height 
-========================================================================== */
 main {
   text-align: center;
 }
 
 /* font size depends on the viewport width */
 main h1 {
-  font-size: 3vw;
+  font-family: Oswald;
+  font-weight: 100;
+  font-size: 2.5vw;
   margin-top: 5px;
   margin-bottom: 5px;
-  font-family: "Oswald";
 }
 
-.about-section {
-  text-align: center;
-  font-family: 'calibri';
-  width: 100%;
-  height: 65vh;
-  margin: auto;
-}
-
-.about-section img {
+#about-main img {
   border: 1px solid black;
 }
 
-.about-section div {
+/* ========================================================================== 
+About Section
+  - height is equal to 65% of the overall viewport height 
+========================================================================== */
+#about-section div {
+  display: grid;
+  grid-gap: 10px;
+  grid-template-columns: 1fr 4fr;
   width: 50vw;
   margin: auto;
   text-align: left;
 }
 
-.about-section span.title {
+#about-section span.title {
   text-align: right;
-  font-family: 'Big Shoulders Display', cursive;
-  font-size: 1.5vw; 
-  border-top: 1px solid black;
-  margin-top: 5px;
+  font-family: 'Big Shoulders Display';
+  font-size: 2vw;
+  border-top: 1px solid #ff7f50;
+  margin-top: 3px;
+}
+
+@media screen and (max-width: 900px) {
+  #about-section span.title {
+    font-size: 18px;
+  }
+}
+
+#about-section span.content {
+  font-family: calibri;
+  font-weight: 100;
+}
+
+/* ul has a too large default margin. */
+#about-section ul {
+  margin: 0;
+  list-style-type: square;
 }
 
 /* ========================================================================== 
 The Grid
 ========================================================================== */
 #grid-section {
-  margin-top: 25px;
   margin-left: 150px;
   margin-right: 150px;
+  font-family: calibri;
 }
 
 #grid-section>#title {
   font-size: 2vw;
 }
 
-#grid-section div {
-  text-align: center;
-}
-
 /* ul is a block element and so need to turn it into inline-block in order to center it. */
 #grid-section ul {
   display: inline-block;
   text-align: left;
-  font-family: "calibri";
   list-style-type: none;
   padding-left: 55px;
+  margin-top: 0px;
 }
 
 #grid-section ul li {
-  margin-bottom: 7px;
+  margin-top: 7px;
+}
+
+#grid-section ul li:last-child {
+  margin-top: 10px;
 }
 
 #grid-section ul li::before {
@@ -181,16 +195,25 @@ The Grid
 
 #select-div {
   display: inline-block;
+  cursor: pointer;
 }
 
 #select-div select {
-  background-color: #ffcc66;
-  color: black;
   padding: 3px;
   width: 150px;
-  border: 1px solid black;
-  border-radius: 5px;
+  border-radius: .2em;
   font-size: 13px;
+  background: linear-gradient(to bottom, #ffffff, orange);
+}
+
+/* I chose box-shadow rather then border manipulation to avoid "jitter" */
+#select-div select:hover {
+  box-shadow: 0 0 2px 2px gray;
+  cursor: pointer;
+}
+
+#select-div select option {
+  background: #ffffcc;
 }
 
 hr {
@@ -232,17 +255,6 @@ hr {
   transform: scale(1.1);
   background-color: #ffa500;
   box-shadow: 10px 10px 5px rgba(0, 0, 0, 0.33);
-}
-
-.twice-wide {
-  grid-column: 1/3;
-}
-
-footer {
-  text-align: center;
-  border-top: 1px solid black;
-  margin-top: 50px;
-  padding: 10px;
 }
 
 figure {
@@ -309,4 +321,22 @@ The Modal
 .closeModalBtn:focus {
   color: black;
   cursor: pointer;
+}
+
+/* if lne-height is the same figure as height, element would be centered vertically */
+footer {
+  font-family: calibri;
+  font-style: italic;
+  font-size: 15px;
+  text-align: center;
+  height: 30px;
+  line-height: 30px;
+  border-top: 1px solid gray;
+  margin-top: 50px;
+}
+
+
+footer img {
+  vertical-align: middle;
+  width: 25px;
 }
