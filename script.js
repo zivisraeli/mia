@@ -30,9 +30,9 @@ let gridItems = [
   new GridItem("id11", "images/miaTry2-450.jpg", "zMia in the park", "09/18/2019", 15, false),
 ];
 
-// ==========================================================================
+// =============================================================================
 // Grid Creation
-// ==========================================================================
+// =============================================================================
 makeGrid = () => {
   // read 'likes' cookie and update the gridItems array accordingly.
   readLikesCookie();
@@ -63,14 +63,14 @@ makeGrid = () => {
        </figure>`;
   });
 
-  // ==========================================================================
+  // =============================================================================
   // Events for the grid elements must be re-created everytime the grid is rendered after sorting.
   // - Get the grid item that opens the modal
   // - When the user clicks on an grid item, either:
   //    - he clicked on the heart icon - toggle it.
   //    - otherwise open the modal popup. 
   // - since getElementsByClassName return HTMLCollection it needs to be convered to an Array
-  // ==========================================================================
+  // =============================================================================
   let allItems = document.getElementsByClassName("grid-item");
   Array.from(allItems).forEach((gridItem) => {
     gridItem.onclick = function(event) {
@@ -84,9 +84,9 @@ makeGrid = () => {
   });
 }
 
-// ==========================================================================
+// =============================================================================
 // Like Toggling 
-// ==========================================================================
+// =============================================================================
 toggleHeart = (event) => {
   // Get the target element (one with the class="heart")
   let theTarget = document.getElementById(event.target.id);
@@ -118,9 +118,9 @@ toggleHeart = (event) => {
   updateLikesCookie(gridItem);
 }
 
-// ==========================================================================
+// =============================================================================
 // Grid Sorting 
-// ==========================================================================
+// =============================================================================
 let mySelect = document.getElementById('select-sort');
 mySelect.onchange = (event) => {
   var inputText = event.target.value;
@@ -157,13 +157,13 @@ function sortGridItems(property, direction) {
   makeGrid();
 }
 
-// ==========================================================================
+// =============================================================================
 // Modal Creation
-// ==========================================================================
+// =============================================================================
 let modal = document.getElementById("imgModal");
-let closeModalBtn = document.getElementsByClassName("closeModalBtn")[0];
+let closeModalBtn = document.getElementsByClassName("close-modal-btn")[0];
 
-// When the user clicks on closeModalBtn, close the modal.
+// When the user clicks on close-modal-btn, close the modal.
 closeModalBtn.onclick = function() {
   modal.style.display = "none";
 }
@@ -175,9 +175,9 @@ window.onclick = function(event) {
   }
 }
 
-// ==========================================================================
+// =============================================================================
 // cookie related functions
-// ==========================================================================
+// =============================================================================
 getCookie = name => {
   // since document.cookie returns all cookie, match would filter out the one I need.
   // the match uses group-match feature
@@ -191,9 +191,9 @@ setCookie = (name, value, days = 365) => {
   document.cookie = name + "=" + value + ";path=/;expires=" + d.toGMTString();
 }
 
-// ==========================================================================
+// =============================================================================
 // readLikesCookie would read 'likes' cookie and update the gridItems array accordingly. 
-// ==========================================================================
+// =============================================================================
 readLikesCookie = () => {
   // read 'likes' cookie
   likeArray = [];
@@ -212,13 +212,13 @@ readLikesCookie = () => {
   });
 }
 
-// ==========================================================================
+// =============================================================================
 // 1. get 'likes' cookie (a string)
 // 2. if not empty, JSON-parse it to convert the string to an array. 
 // 3. push or remove (filter) an element based on gridItem.isLiked value.
 // 4. JSON-stringify it to convert the array to a string. 
 // 5. set the cookie with the new string.
-// ==========================================================================
+// =============================================================================
 updateLikesCookie = (gridItem) => {
   let likeArray = [];
   let likeCookie = getCookie('likes');
@@ -239,3 +239,4 @@ updateLikesCookie = (gridItem) => {
 }
 
 makeGrid();
+

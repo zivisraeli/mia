@@ -1,15 +1,19 @@
+:root {
+  --orange-color: #ffa500;
+}
+
 /* by default, the browser sets some marging. I eliminate it. */
 body {
   background-color: #ebebeb;
   margin: 0;
 }
 
-/* ========================================================================== 
+/* =============================================================================
   - using flex so elements follow each other horizontally. later on - vertically.
   - sticky position is preferable over fixed since it keeps the element part of the flow. 
   - width of the entire screen
   - z-index will make it on top of any other element (the position property removes it from the normal flow.)
-========================================================================== */
+============================================================================= */
 header {
   display: flex;
   position: sticky;
@@ -35,13 +39,13 @@ header {
   top: 5px;
 }
 
-/* ========================================================================== 
+/* =============================================================================
   - flex would allow me later on to arrange them vertically.
   - margin-left:auto;  would push the element all the way to the right. 
   - "auto" : taking up available space!!!!!!
   - the 100% height would strech the div element to the height of its container.
   - under 600px flex elements are vertically ordered and centered through margin property.
-========================================================================== */
+============================================================================= */
 nav {
   display: flex;
   align-items: center;
@@ -52,29 +56,13 @@ nav {
 
 }
 
-/* the nav elements should be placed vertically and in the center on small screens */
-@media screen and (max-width: 900px) {
-  header {
-    justify-content: center;
-  }
-
-  nav {
-    flex-direction: column;
-    margin: 0px;
-  }
-
-  .header-img {
-    left: 50px;
-  }
-}
-
-/* ========================================================================== 
+/* =============================================================================
 For the top navigation menu anchors:
   - no underline 
   - font size depends on the viewport width 
   - I need to  use padding and not margin to show a gap with the border
   - vertical line separator through border-right
-========================================================================== */
+============================================================================= */
 nav a {
   text-decoration: none;
   font-size: 3vw;
@@ -92,15 +80,7 @@ nav a:last-child {
 
 nav a:hover {
   background-color: white;
-  color: orange;
-}
-
-@media screen and (max-width: 900px) {
-  nav a {
-    font-size: 2.5vw;
-    padding: 2px;
-    border: none;
-  }
+  color: var(--orange-color);
 }
 
 main {
@@ -120,10 +100,10 @@ main h1 {
   border: 1px solid black;
 }
 
-/* ========================================================================== 
+/* =============================================================================
 About Section
   - height is equal to 65% of the overall viewport height 
-========================================================================== */
+============================================================================= */
 #about-section div {
   display: grid;
   grid-gap: 10px;
@@ -141,12 +121,6 @@ About Section
   margin-top: 3px;
 }
 
-@media screen and (max-width: 900px) {
-  #about-section span.title {
-    font-size: 18px;
-  }
-}
-
 #about-section span.content {
   font-family: calibri;
   font-weight: 100;
@@ -158,9 +132,9 @@ About Section
   list-style-type: square;
 }
 
-/* ========================================================================== 
+/* =============================================================================
 The Grid
-========================================================================== */
+============================================================================= */
 #grid-section {
   margin-left: 150px;
   margin-right: 150px;
@@ -220,7 +194,7 @@ hr {
   margin-bottom: 20px;
 }
 
-/* ==========================================================================
+/* =============================================================================
   - grid-template-columns: auto-fit so the number of elems horizontally changes.
   - fr unit is grid specifc. fraction. The item would grow and shrink basd on the available space.
   - repeat function would repeat a pattern i.e. repeat(3, 1fr); instead of 1fr 1fr 1fr;
@@ -228,7 +202,7 @@ hr {
   - minmax function defines the range i.e. from 320px to 1fr
   - grid-gap would set gap between items 
   - the grid determines the WIDTH of the img. Since the imgs are square the HEIGHT would equal the WIDTH.
-========================================================================== */
+============================================================================= */
 .the-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
@@ -252,7 +226,7 @@ hr {
 /* would transition all properties that their valued changed (trans, color, shadow) */
 .grid-item:hover {
   transition: all 0.5s ease-in-out;
-  transform: scale(1.1);
+  trans#old-form: scale(1.1);
   background-color: #ffa500;
   box-shadow: 10px 10px 5px rgba(0, 0, 0, 0.33);
 }
@@ -272,9 +246,9 @@ figcaption {
   margin-bottom: 5px;
 }
 
-/* ==========================================================================
+/* =============================================================================
 The Modal
-========================================================================== */
+============================================================================= */
 .modal {
   display: none;
   /* Hidden by default */
@@ -308,17 +282,17 @@ The Modal
   border: 1px solid black;
 }
 
-/* The closeModalBtn Button */
-.closeModalBtn {
-  color: orange;
+/* The close-modal-btn Button */
+.close-modal-btn {
+  color: var(--orange-color);
   float: right;
   font-size: 20px;
   font-weight: bold;
 }
 
 /* Change the close btn color and cursor */
-.closeModalBtn:hover,
-.closeModalBtn:focus {
+.close-modal-btn:hover,
+.close-modal-btn:focus {
   color: black;
   cursor: pointer;
 }
@@ -335,8 +309,158 @@ footer {
   margin-top: 50px;
 }
 
-
 footer img {
   vertical-align: middle;
   width: 25px;
 }
+
+/* =============================================================================
+   Fan Form
+============================================================================= */
+
+#form-header {
+  margin: auto;
+  width: 500px;
+  font-family: calibri;
+  text-align: left;
+}
+
+#form-header ul {
+  list-style-type: square;
+}
+
+/* Center the form on the page */
+form {
+  margin: auto;
+  width: 400px;
+  padding: 3em;
+  border: 1px solid #cccccc;
+  border-radius: 1em;
+  background-color: #f8f8f8;
+  font-family: calibri;
+}
+
+/* place some top margin for all div's except the 1st one */
+form div+div {
+  margin-top: 1em;
+}
+
+/* since label is an inline element, using inline-block would allow specifying width */
+label {
+  display: inline-block;
+  width: 80px;
+  text-align: right;
+}
+
+/* ouline: none; removes the blue outline */
+input[type=text],
+input[type=email],
+input[type=tel],
+textarea {
+  font: 1em calibri;
+  width: 300px;
+  box-sizing: border-box;
+  border: 1px solid #999;
+  box-shadow: 1px 1px 4px #C0C0C0;
+  outline: none;
+}
+
+/* since all other input element are 300px wide, here there r multiple inputs (radio btns) */
+#radio-btns-div {
+  display: inline-block;
+  text-align: left;
+  width: 300px;
+}
+
+/* Additional highlight for focused elements */
+input:focus,
+textarea:focus {
+  border: 1px solid #ffad33;
+}
+
+/* Align textarea with the labels */
+textarea {
+  vertical-align: top;
+  height: 5em;
+}
+
+/* center the submit button. Same size as the label elements */
+.button {
+  padding-left: 80px;
+}
+
+button {
+  height: 33px;
+}
+
+/* =============================================================================
+   Media Queries
+============================================================================= */
+/* the nav elements should be placed vertically and in the center */
+@media screen and (max-width: 900px) {
+  header {
+    justify-content: center;
+  }
+
+  .header-img {
+    left: 50px;
+  }
+
+  nav {
+    flex-direction: column;
+    margin: 0px;
+  }
+
+  nav a {
+    font-size: 2.5vw;
+    padding: 2px;
+    border: none;
+  }
+
+  #about-section span.title {
+    font-size: 18px;
+  }
+
+  #about-section div {
+    width: 70vw;
+  }
+
+  #grid-section {
+    margin-left: 50px;
+    margin-right: 50px;
+  }
+
+  #form-header {
+    width: 400px;
+  }
+
+  form {
+    width: 300px;
+    padding: 1.5em;
+  }
+
+  form div {
+    text-align: left;
+  }
+
+  form label {
+    display: block;
+    text-align: left;
+  }
+
+  form .button {
+    padding-left: 100px;
+  }
+}
+
+@media screen and (max-width: 700px) {
+  #about-section div {
+    width: 90vw;
+  }
+}
+
+
+
+  nav a:select {
+    color: red;
+  }
