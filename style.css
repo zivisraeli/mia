@@ -19,15 +19,12 @@ header {
   position: sticky;
   top: 0;
   background: linear-gradient(to right, orange, yellow);
-  font-family: Oswald;
-  font-size: 1.5em;
   border-top: 1px solid gray;
   border-bottom: 1px solid gray;
   width: 100%;
   height: 110px;
   z-index: 1;
 }
-
 
 /* header-img's border-radius makes the image round. */
 .header-img {
@@ -46,14 +43,13 @@ header {
   - the 100% height would strech the div element to the height of its container.
   - under 600px flex elements are vertically ordered and centered through margin property.
 ============================================================================= */
-nav {
+header nav {
   display: flex;
   align-items: center;
   justify-content: center;
   margin-right: 150px;
   margin-left: auto;
   height: 100%;
-
 }
 
 /* =============================================================================
@@ -63,9 +59,11 @@ For the top navigation menu anchors:
   - I need to  use padding and not margin to show a gap with the border
   - vertical line separator through border-right
 ============================================================================= */
-nav a {
+header nav a {
   text-decoration: none;
-  font-size: 3vw;
+  font-family: Oswald;
+  font-weight: 100;
+  font-size: 2.5vw;
   padding-left: 20px;
   padding-right: 20px;
   color: black;
@@ -74,13 +72,12 @@ nav a {
 }
 
 /* so the last menu entry doesn't have a vertical line */
-nav a:last-child {
+header nav a:last-child {
   border-right: none;
 }
 
-nav a:hover {
-  background-color: white;
-  color: var(--orange-color);
+header nav a:hover {
+  color: #ff9900;
 }
 
 main {
@@ -460,7 +457,34 @@ button {
 }
 
 
+/* ===========================================================================================
+===========================================================================================
+===========================================================================================
+===========================================================================================
+===========================================================================================
+=========================================================================================== */
+.movable-img {
+  height: 100px;
+  width: 100px;
+  background-color: red;
+  position: relative;
+  top: 5px;
+  left: 5px;
+  cursor: pointer;
+}
 
-  nav a:select {
-    color: red;
-  }
+.holder {
+  height: 110px;
+  width: 110px;
+  margin: 10px;
+  border: solid 5px black;
+  background-color: white;
+  display: inline-block;
+}
+
+.hovered {
+  padding: 3px;
+  border: dotted 2px gray;
+}
+
+

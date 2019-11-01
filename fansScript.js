@@ -28,14 +28,3 @@ enableBreedField = (value) => {
 }
 
 enableBreedField(false);
-
-/*let anchor = '';
-let pageName = window.location.pathname;
-if (pageName.includes("index.html")) {
-    anchor = document.querySelector('nav a#index');
-} else if (pageName.includes("selfies.html")) {
-    anchor = document.querySelector('nav a#selfies');
-} else if (pageName.includes("fans.html")) {
-    anchor = document.querySelector('nav a#fans');
-}
-anchor.style.color = 'red';*/
