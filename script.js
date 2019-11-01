@@ -178,11 +178,11 @@ window.onclick = function(event) {
 // =============================================================================
 // cookie related functions
 // =============================================================================
-getCookie = name => {
+getCookie = (name) => {
   // since document.cookie returns all cookie, match would filter out the one I need.
   // the match uses group-match feature
   let value = document.cookie.match('(^|;) ?' + name + '=([^;]*)(;|$)');
-  return value ? v[2] : null;
+  return value ? value[2] : null;
 }
 
 setCookie = (name, value, days = 365) => {
