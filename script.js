@@ -237,7 +237,7 @@ updateLikesCookie = (gridItem) => {
 // we then change the "src" attribte.
 drop = () => {
   headerImg.setAttribute("src", movableImgSrc);
-  let imgId = movableImgSrc.match('/mia-(.*).jpg')[1];
+  let imgId = movableImgSrc.match('mia-(.*).jpg')[1];
   setCookie("headerImgId", imgId);
 }
 
