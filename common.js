@@ -4,8 +4,8 @@
 getCookie = (name) => {
   // since document.cookie returns all cookie, match would filter out the one I need.
   // the match uses group-match feature
-  let value = document.cookie.match('(^|;) ?' + name + '=([^;]*)(;|$)');
-  return value ? value[2] : null;
+  let value = document.cookie.match('[^|;] ?' + name + '=([^;]*)[;|$]');
+  return value ? value[1] : null;
 }
 
 setCookie = (name, value, days = 365) => {
