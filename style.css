@@ -22,18 +22,35 @@ header {
   border-top: 1px solid gray;
   border-bottom: 1px solid gray;
   width: 100%;
-  height: 90px;
+  height: 95px;
   z-index: 1;
 }
 
+/* this is an "invisble div". it's used to "widen" the area into which images can be dropped into
+(to replace the header's image). Otherwise, the user would have to aim exactly at the circular image. */
+header #dragged-into-div {
+  width: 200px;
+  height: 200px;
+  position: absolute;
+  top:0;
+  left: 150px;
+}
+
 /* header-img's border-radius makes the image round. */
-.header-img {
+header #header-img {
   width: 125px;
   border: 1px solid black;
   border-radius: 50%;
   position: absolute;
-  left: 150px;
+  left: 0px;
   top: 5px;
+}
+
+/* The header image would change it's style upon being dragged into to create a "hint" for the user. 
+the img-hovered class is added and removed upon dragenter() dragleave() events. */
+header #header-img.img-hovered {
+  padding: 2px;
+  border: 2px dotted gray;
 }
 
 /* =============================================================================
@@ -294,16 +311,20 @@ The Modal
   cursor: pointer;
 }
 
-/* if lne-height is the same figure as height, element would be centered vertically */
+/* If line-height is the same figure as height, element would be centered vertically */
 footer {
-  font-family: calibri;
-  font-style: italic;
-  font-size: 15px;
   text-align: center;
   height: 30px;
   line-height: 30px;
   border-top: 1px solid gray;
   margin-top: 50px;
+}
+
+/* The 1st and last spans r styled 'italic' yet the divider char is not. */
+footer span:first-child, footer span:last-child {
+  font-family: calibri;
+  font-style: italic;
+  font-size: 15px;
 }
 
 footer img {
@@ -399,7 +420,7 @@ button {
     justify-content: center;
   }
 
-  .header-img {
+  header #dragged-into-div {
     left: 50px;
   }
 
@@ -454,17 +475,17 @@ button {
   #about-section div {
     width: 90vw;
   }
-}
 
+  /* the two footer spans are split veritically */
+  footer {
+    line-height: 20px;
+  }
 
-/* ===========================================================================================
-===========================================================================================
-===========================================================================================
-===========================================================================================
-===========================================================================================
-=========================================================================================== */
+  #footer-divider {
+    visibility: hidden;
+  }
 
-.img-hovered {
-  padding: 2px;
-  border: 2px solid gray;
+  #footer-copyright {
+        display: block;
+  }
 }

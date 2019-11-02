@@ -11,8 +11,10 @@
 
 <body>
   <header>
-    <!-- <img src="images/miaHeadshot.jpg" id="header-img" class="header-img"> -->
-    <img src="" id="header-img" class="header-img">
+    <div id="dragged-into-div">
+      <!-- src value is determined in the script per the headerImg cookie -->
+      <img src="" id="header-img" class="header-img">
+    </div>
     <nav id="navbar">
       <a href="index.html"><span id="index">About</span></a>
       <a href="selfies.html"><span id="selfies">Selfies</span></a>
@@ -45,8 +47,11 @@
     </section>
   </main>
   <footer>
-    Disclaimer: This site is using cookies. &nbsp;&nbsp; | &nbsp;&nbsp;COPYRIGHTS &copy; 2019 Mia Israeli All Rights Reserved.
-    <img src="images/paw2.png" />
+    <span>Disclaimer: This site is using cookies.</span>
+    <span id="footer-divider">&nbsp;&nbsp;|&nbsp;&nbsp;</span>
+    <span id="footer-copyright">COPYRIGHTS &copy; 2019 Mia Israeli All Rights Reserved.
+      <img src="images/paw2.png" />
+    </span>
   </footer>
   <!-- The Modal -->
   <div id="imgModal" class="modal">
