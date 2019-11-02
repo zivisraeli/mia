@@ -1,11 +1,12 @@
 // =============================================================================
 // cookie related functions
+// with
 // =============================================================================
 getCookie = (name) => {
   // since document.cookie returns all cookie, match would filter out the one I need.
-  // the match uses group-match feature
-  let value = document.cookie.match('[^|;] ?' + name + '=([^;]*)[;|$]');
-  return value ? value[1] : null;
+  // the match regex: cookie name should follow an equal sign AND NOT a space of a semi-colon.
+  let value = document.cookie.match('[; ]'+ cookieName + '=([^\\s;]*)');
+  return value ? value[2] : null;
 }
 
 setCookie = (name, value, days = 365) => {
