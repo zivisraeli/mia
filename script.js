@@ -238,7 +238,7 @@ updateLikesCookie = (gridItem) => {
 drop = () => {
   headerImg.setAttribute("src", movableImgSrc);
   let imgId = movableImgSrc.match('/mia-(.*).jpg')[1];
-  setCooke("headerImgId", imgId);
+  setCookie("headerImgId", imgId);
 }
 
 dragover = (e) => {
