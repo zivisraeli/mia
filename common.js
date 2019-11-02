@@ -1,3 +1,22 @@
+// =============================================================================
+// cookie related functions
+// =============================================================================
+getCookie = (name) => {
+  // since document.cookie returns all cookie, match would filter out the one I need.
+  // the match uses group-match feature
+  let value = document.cookie.match('(^|;) ?' + name + '=([^;]*)(;|$)');
+  return value ? value[2] : null;
+}
+
+setCookie = (name, value, days = 365) => {
+  let d = new Date;
+  d.setTime(d.getTime() + 24 * 60 * 60 * 1000 * days);
+  document.cookie = name + "=" + value + ";path=/;expires=" + d.toGMTString();
+}
+
+// =============================================================================
+// Determine the current slected menu and style it differently. 
+// =============================================================================
 currentMenuEntry = () => {
   let anchor = '';
   let pageName = window.location.pathname;
@@ -11,41 +30,18 @@ currentMenuEntry = () => {
   anchor.style.textShadow = '1px 1px 4px gray';
 }
 
+// =============================================================================
+// Based on a cookie value find the header img id and set the image accordingly.
+// =============================================================================
+setHeaderImage = () => {
+    let headerImgId = getCookie("headerImgId");
+    headerImgId = headerImgId === null ? 'id0' : headerImgId;
+    let headerImgSrc = `images/mia-${headerImgId}.jpg`;
+    let headerImgElem = document.querySelector("header img");
+    headerImgElem.setAttribute("src", headerImgSrc);    
+}
+
+// =============================================================================
+
 currentMenuEntry();
-
-/* ============================================================== */
-
-// get the content of the movable image
-let movableImgElem = document.querySelector("#movable-img");
-let movableImgSrc = movableImgElem.getAttribute("src");
-movableImgElem.addEventListener("dragend", dragend);
-
-// get the destination container and attach 2 events to it.
-let headerImg = document.querySelector('#header-img');
-headerImg.addEventListener("dragover", dragover);
-headerImg.addEventListener("drop", drop);
-headerImg.addEventListener("dragenter", dragenter);
-headerImg.addEventListener("dragleave", dragleave);
-headerImg.addEventListener("dragend", dragend);
-
-function drop() {
-  headerImg.setAttribute("src", movableImgSrc);
-}
-
-function dragover(e) {
-  e.preventDefault()
-}
-
-function dragenter(e) {
-  e.preventDefault()
-  this.classList.add("hovered");
-}
-
-function dragleave() {
-  headerImg.classList.remove("hovered");
-}
-
-function dragend() {
-  console.log('end');
-  headerImg.classList.remove("hovered");
-}
+setHeaderImage();

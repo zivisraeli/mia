@@ -16,9 +16,9 @@ class GridItem extends Item {
 }
 
 let gridItems = [
-  new GridItem("id0", "images/miaTry2-450.jpg", "zMia in the park", "09/18/2019", 15, false),
-  new GridItem("id1", "images/miaTry1-600.jpg", "dMia in the park", "09/18/2019", 25, false),
-  new GridItem("id2", "images/miaTry2-450.jpg", "cMia in the park", "09/18/2019", 5, false),
+  new GridItem("id0", "images/mia-id0.jpg", "zMia in the park", "09/18/2019", 15, false),
+  new GridItem("id1", "images/mia-id1.jpg", "dMia in the park", "09/18/2019", 25, false),
+  new GridItem("id2", "images/mia-id2.jpg", "cMia in the park", "09/18/2019", 5, false),
   new GridItem("id3", "images/miaTry3-400.jpg", "wMia in the park", "09/18/2019", 17, false),
   new GridItem("id4", "images/miaTry1-600.jpg", "aMia in the park", "09/18/2019", 2, false),
   new GridItem("id5", "images/miaTry2-450.jpg", "aMia in the park", "09/18/2019", 5, false),
@@ -73,6 +73,8 @@ makeGrid = () => {
   // =============================================================================
   let allItems = document.getElementsByClassName("grid-item");
   Array.from(allItems).forEach((gridItem) => {
+
+    // add onclick event to open the model popup
     gridItem.onclick = function(event) {
       // Manipulate the  heart
       if (event.target.className === "heart") {
@@ -81,6 +83,11 @@ makeGrid = () => {
         modal.style.display = "block";
       }
     }
+
+    // add the drag events
+    let gridImage = gridItem.querySelector(".grid-image");
+    gridImage.addEventListener("dragstart", dragstart);
+    gridImage.addEventListener("dragend", dragend);
   });
 }
 
@@ -176,22 +183,6 @@ window.onclick = function(event) {
 }
 
 // =============================================================================
-// cookie related functions
-// =============================================================================
-getCookie = (name) => {
-  // since document.cookie returns all cookie, match would filter out the one I need.
-  // the match uses group-match feature
-  let value = document.cookie.match('(^|;) ?' + name + '=([^;]*)(;|$)');
-  return value ? value[2] : null;
-}
-
-setCookie = (name, value, days = 365) => {
-  let d = new Date;
-  d.setTime(d.getTime() + 24 * 60 * 60 * 1000 * days);
-  document.cookie = name + "=" + value + ";path=/;expires=" + d.toGMTString();
-}
-
-// =============================================================================
 // readLikesCookie would read 'likes' cookie and update the gridItems array accordingly. 
 // =============================================================================
 readLikesCookie = () => {
@@ -238,5 +229,49 @@ updateLikesCookie = (gridItem) => {
   setCookie('likes', likeCookie);
 }
 
-makeGrid();
+// =============================================================================
+// Drag and Drop
+// =============================================================================
 
+// when the "movable" image is "dropped" at its target (headerImag)
+// we then change the "src" attribte.
+drop = () => {
+  headerImg.setAttribute("src", movableImgSrc);
+  let imgId = movableImgSrc.match('/mia-(.*).jpg')[1];
+  setCooke("headerImgId", imgId);
+}
+
+dragover = (e) => {
+  e.preventDefault();
+}
+
+dragenter = (e) => {
+  e.preventDefault();
+  headerImg. classList.add("img-hovered");
+}
+
+dragleave = () => {
+  headerImg.classList.remove("img-hovered");
+}
+
+// both, dragstart & dragend happens on the originating element.
+dragend = () => {
+  headerImg.classList.remove("img-hovered");
+}
+
+// upon starting, capture the image src of the "movable" image.
+dragstart = (e) => {
+   movableImgSrc = e.target.src;
+}
+
+// get the destination container and attach 2 events to it.
+let headerImg = document.querySelector('#header-img');
+headerImg.addEventListener("dragover", dragover);
+headerImg.addEventListener("drop", drop);
+headerImg.addEventListener("dragenter", dragenter);
+headerImg.addEventListener("dragleave", dragleave);
+headerImg.addEventListener("dragend", dragend);
+
+// =============================================================================
+
+makeGrid();

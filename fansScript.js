@@ -1,5 +1,6 @@
-
-
+// =============================================================================
+// Adding listerner to the radio button to enable/disable the dog breed field
+// =============================================================================
 let radioBtns = document.querySelectorAll('[type="radio"]');
 radioBtns.forEach((btn) => {
   btn.addEventListener('click', (event) => {
@@ -26,5 +27,7 @@ enableBreedField = (value) => {
     breedInput.disabled = true;
   }
 }
+
+// =============================================================================
 
 enableBreedField(false);
