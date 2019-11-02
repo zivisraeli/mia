@@ -5,7 +5,7 @@
 getCookie = (name) => {
   // since document.cookie returns all cookie, match would filter out the one I need.
   // the match regex: cookie name should follow an equal sign AND NOT a space of a semi-colon.
-  let value = document.cookie.match('[; ]'+ cookieName + '=([^\\s;]*)');
+  let value = document.cookie.match('[; ]'+ name + '=([^\\s;]*)');
   return value ? value[2] : null;
 }
 
