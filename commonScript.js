@@ -41,7 +41,13 @@ setHeaderImage = () => {
     headerImgId = headerImgId === null ? 'id0' : headerImgId;
     let headerImgSrc = `images/mia-${headerImgId}.jpg`;
     let headerImgElem = document.querySelector("header img");
-    headerImgElem.setAttribute("src", headerImgSrc);    
+    headerImgElem.setAttribute("src", headerImgSrc);  
+
+    // Without this function the border will be drawn first as a straight line and then 
+    // the image would appear. I'm waiting for the image to be loaded frist. 
+    headerImgElem.onload = function() {
+      headerImgElem.style.border = "1px solid black";
+    }
 }
 
 // =============================================================================

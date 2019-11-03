@@ -26,7 +26,7 @@ header {
   z-index: 1;
 }
 
-/* this is an "invisble div". it's used to "widen" the area into which images can be dropped into
+/* This is an "invisble div". it's used to "widen" the area into which images can be dropped into
 (to replace the header's image). Otherwise, the user would have to aim exactly at the circular image. */
 header #dragged-into-div {
   width: 200px;
@@ -36,10 +36,10 @@ header #dragged-into-div {
   left: 150px;
 }
 
-/* header-img's border-radius makes the image round. */
+/* header-img's border-radius makes the image round. 
+   The image also has a border assigned by the javascript. */
 header #header-img {
   width: 125px;
-  border: 1px solid black;
   border-radius: 50%;
   position: absolute;
   left: 0px;

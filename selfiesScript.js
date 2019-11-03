@@ -33,14 +33,18 @@ let gridItems = [
 // =============================================================================
 // Grid Creation
 // =============================================================================
-makeGrid = () => {
+renderGrid = () => {
   // read 'likes' cookie and update the gridItems array accordingly.
   readLikesCookie();
 
-  // loop through the gridItems array and construct the grid.
+  // read 'sort' cookie and sort the gridItems array accordingly. 
+  readSortCookie();
+
+  // get the grid element and blank it out. 
   let theGrid = document.querySelector(".the-grid");
   theGrid.innerHTML = '';
 
+  // loop through the gridItems array and construct the grid.
   gridItems.forEach((elem, i) => {
     let id = elem.id;
     let src = elem.src;
@@ -135,40 +139,48 @@ toggleHeart = (event) => {
 // =============================================================================
 // Grid Sorting 
 // =============================================================================
-let mySelect = document.getElementById('select-sort');
-mySelect.onchange = (event) => {
-  var inputText = event.target.value;
-  var ind = event.target.selectedIndex;
-  switch (ind) {
+let selectSort = document.getElementById('select-sort');
+selectSort.onchange = (event) => {
+  let inputText = event.target.value;
+  let index = event.target.selectedIndex;
+  switch (index) {
     case 0:
       sortGridItems('likes', 1);
+      setCookie('sort', 'likes+1');
       break;
     case 1:
       sortGridItems('likes', -1);
+      setCookie('sort', 'likes-1');
       break;
     case 2:
       sortGridItems('captions', 1);
+      setCookie('sort', 'captions+1');
       break;
     case 3:
       sortGridItems('captions', -1);
+      setCookie('sort', 'captions-1');
       break;
     default:
       break;
   }
+  
+  renderGrid();
 }
 
-function sortGridItems(property, direction) {
+/* The sort function take a "compare" function as a parameter. 
+This function takes 2 parameters, compare them and return true or false. */
+sortGridItems = (sortByAttr, direction) => {
   let sortedGridItems = gridItems.sort((item1, item2) => {
     let retVal = 0;
-    if (property === "captions") {
+    if (sortByAttr === "captions") {
       retVal = item1.caption.toUpperCase() > item2.caption.toUpperCase() ? 1 : -1;
     } else {
       retVal = item1.likeCount > item2.likeCount ? 1 : -1;
     }
     return retVal * direction;
   });
+
   gridItems = sortedGridItems;
-  makeGrid();
 }
 
 // =============================================================================
@@ -210,6 +222,22 @@ readLikesCookie = () => {
       gridElem.likeCount++;
     }
   });
+}
+
+readSortCookie = () => {
+  let sortAttr = '';
+  let sortDirection = '';
+  let sortCookie = getCookie('sort');
+  if (sortCookie === null) {
+    sortAttr = 'likes';
+    sortDirection = -1;
+  } else {
+    let sortArr = sortStr.match('(.*)([-+]1)');
+    sortAttr = sortArr[1];
+    sortDirection = sortArr[2];
+  }
+
+  sortGridItems(sortAttr, sortDirection);
 }
 
 // =============================================================================
@@ -289,4 +317,4 @@ draggedIntoDiv.addEventListener("dragleave", dragleave);
 
 // =============================================================================
 
-makeGrid();
+renderGrid();
