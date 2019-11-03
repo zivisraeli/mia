@@ -7,7 +7,7 @@ getCookie = (name) => {
   // the match regex: cookie name should follow an equal sign AND NOT a space of a semi-colon.
   // with 'capturing groups' we get an array with the array[0] is the entire expression value.
   // the rest of the values are the group's value.
-  let value = document.cookie.match('[; ]'+ name + '=([^\\s;]*)');
+  let value = document.cookie.match('(?:^|;)\\s?' + name + '=([^\\s;]*)');
   return value ? value[1] : null;
 }
 
