@@ -232,7 +232,7 @@ readSortCookie = () => {
     sortAttr = 'likes';
     sortDirection = -1;
   } else {
-    let sortArr = sortStr.match('(.*)([-+]1)');
+    let sortArr = sortCookie.match('(.*)([-+]1)');
     sortAttr = sortArr[1];
     sortDirection = sortArr[2];
   }
