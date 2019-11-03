@@ -233,7 +233,7 @@ readSortCookie = () => {
     // Find the select option element that and add 'selected' attribute.
     // The options carry the same id as the cookie.
     let selectedOption = document.getElementById(sortCookie);
-    selectedOption.setAttribute("selected");
+    selectedOption.setAttribute("selected", "selected");
   }
 
   sortGridItems(sortAttr, sortDirection);
