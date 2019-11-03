@@ -34,12 +34,6 @@ let gridItems = [
 // Grid Creation
 // =============================================================================
 renderGrid = () => {
-  // read 'likes' cookie and update the gridItems array accordingly.
-  readLikesCookie();
-
-  // read 'sort' cookie and sort the gridItems array accordingly. 
-  readSortCookie();
-
   // get the grid element and blank it out. 
   let theGrid = document.querySelector(".the-grid");
   theGrid.innerHTML = '';
@@ -163,7 +157,7 @@ selectSort.onchange = (event) => {
     default:
       break;
   }
-  
+
   renderGrid();
 }
 
@@ -237,7 +231,7 @@ readSortCookie = () => {
     sortDirection = sortArr[2];
 
     // Find the select option element that and add 'selected' attribute.
-    // The options carry the same id as the cookie. 
+    // The options carry the same id as the cookie.
     let selectedOption = document.getElementById(sortCookie);
     selectedOption.setAttribute("selected");
   }
@@ -321,5 +315,11 @@ draggedIntoDiv.addEventListener("dragenter", dragenter);
 draggedIntoDiv.addEventListener("dragleave", dragleave);
 
 // =============================================================================
+
+// read 'likes' cookie and update the gridItems array accordingly.
+readLikesCookie();
+
+// read 'sort' cookie and sort the gridItems array accordingly. 
+readSortCookie();
 
 renderGrid();
