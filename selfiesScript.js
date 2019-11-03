@@ -245,10 +245,6 @@ updateLikesCookie = (gridItem) => {
 // when the "movable" image is "dropped" at its target (headerImg)
 // we then change the "src" attribute.
 drop = () => {
-  console.log(event.type);
-  console.log(event.target);
-  console.log(event.relatedTarget);
-  console.log("============");
   headerImg.setAttribute("src", movableImgSrc);
   let imgId = movableImgSrc.match('mia-(.*).jpg')[1];
   setCookie("headerImgId", imgId);
@@ -259,10 +255,6 @@ dragover = (event) => {
 }
 
 dragenter = (event) => {
-  console.log(event.type);
-  console.log(event.target);
-  console.log(event.relatedTarget);
-  console.log("============");
   event.preventDefault();
   headerImg.classList.add("img-hovered");
 }
@@ -270,10 +262,6 @@ dragenter = (event) => {
 // if image is dragged outside the div BUT into the image (the image is inside the div)
 // then it's still considered inside the div and therefor don't remove the hover styling.
 dragleave = (event) => {
-  console.log(event.type);
-  console.log(event.target);
-  console.log(event.relatedTarget);
-  console.log("============");
   let relatedTargetId = event.relatedTarget.id;
   if (relatedTargetId != 'header-img') {
     headerImg.classList.remove("img-hovered");
@@ -282,19 +270,11 @@ dragleave = (event) => {
 
 // both, dragstart & dragend happens on the originating element.
 dragend = (event) => {
-  console.log(event.type);
-  console.log(event.target);
-  console.log(event.relatedTarget);
-  console.log("============");
   headerImg.classList.remove("img-hovered");
 }
 
 // upon starting, capture the image src of the "movable" image.
 dragstart = (event) => {
-  console.log(event.type);
-  console.log(event.target);
-  console.log(event.relatedTarget);
-  console.log("============");
   movableImgSrc = event.target.src;
 }
 
