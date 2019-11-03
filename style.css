@@ -32,7 +32,7 @@ header #dragged-into-div {
   width: 200px;
   height: 200px;
   position: absolute;
-  top:0;
+  top: 0;
   left: 150px;
 }
 
@@ -260,47 +260,50 @@ figcaption {
   margin-bottom: 5px;
 }
 
+
 /* =============================================================================
 The Modal
 ============================================================================= */
-.modal {
+/* 
+   - Initally it's hidden with display:none.
+   - Blurring the rest of the viewport withe background-color.
+   - z-index would place the modal on top when active. */
+#modal-container {
   display: none;
-  /* Hidden by default */
   position: fixed;
-  /* Stay in place */
   z-index: 1;
-  /* Sit on top when active */
-  padding-top: 100px;
-  /* Location of the box */
   left: 0;
   top: 0;
   width: 100%;
-  /* Full width */
   height: 100%;
-  /* Full height */
-  background-color: rgba(0, 0, 0, 0.6);
-  /* Black w/ opacity */
 }
 
 /* Modal Content, img */
-.modal-content {
+#modal-content {
+  position: relative;
+  top: 110px;
   background-color: #fefefe;
   margin: auto;
-  padding: 0px 25px 25px 25px;
   width: 25vw;
 }
 
+#modal-img {
+  padding: 25px 25px 25px 25px;
+}
+
 /* Modal image should be the width of the containing div */
-.modal-content img {
+#modal-img img {
   width: 100%;
   border: 1px solid black;
 }
 
 /* The close-modal-btn Button */
 .close-modal-btn {
+  position: relative;
+  right: 5px;
   color: var(--orange-color);
   float: right;
-  font-size: 20px;
+  font-size: 25px;
   font-weight: bold;
 }
 
@@ -321,7 +324,8 @@ footer {
 }
 
 /* The 1st and last spans r styled 'italic' yet the divider char is not. */
-footer span:first-child, footer span:last-child {
+footer span:first-child,
+footer span:last-child {
   font-family: calibri;
   font-style: italic;
   font-size: 15px;
@@ -431,7 +435,6 @@ button {
 
   header nav a {
     font-size: 2.5vw;
-    padding: 2px;
     border: none;
   }
 
@@ -486,6 +489,6 @@ button {
   }
 
   #footer-copyright {
-        display: block;
+    display: block;
   }
 }

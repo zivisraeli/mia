@@ -53,11 +53,18 @@
       <img src="images/paw2.png" />
     </span>
   </footer>
-  <!-- The Modal -->
-  <div id="imgModal" class="modal">
-    <div class="modal-content">
+  <!-- The modal has 3 divs:
+         - modal-container is 100% wide and eclipses the background
+         - modal-content is necessary to position the X char properly.
+         - modal-img carries the image properties.
+       The img's src is determined in the script. 
+  -->
+  <div id="modal-container">
+    <div id="modal-content">
       <span class="close-modal-btn">&times;</span>
-      <img src="images/mia13.jpg" />
+      <div id="modal-img">
+        <img src="" />
+      </div>
     </div>
   </div>
 </body>

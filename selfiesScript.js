@@ -76,11 +76,17 @@ makeGrid = () => {
 
     // add onclick event to open the model popup
     gridItem.onclick = function(event) {
-      // Manipulate the  heart
+      // Manipulate the heart
       if (event.target.className === "heart") {
         toggleHeart(event);
       } else {
         modal.style.display = "block";
+        let theImgSrc = event.target.src;
+        let targetImg = modal.querySelector("img");
+        targetImg.setAttribute("src", theImgSrc);
+
+        let gridSection = document.querySelector("#grid-section");
+        gridSection.style.filter = "blur(12px)";
       }
     }
 
@@ -95,7 +101,7 @@ makeGrid = () => {
 // Like Toggling 
 // =============================================================================
 toggleHeart = (event) => {
-  // Get the target element (one with the class="heart")
+  // Get the target element based on the target id
   let theTarget = document.getElementById(event.target.id);
 
   // Based on the target id, find the element in the gridItems and:
@@ -114,6 +120,7 @@ toggleHeart = (event) => {
     gridItem.isLiked = true;
     gridItem.likeCount++;
     theTarget.setAttribute("src", "images/heartMid3.jpg");
+    theTarget.setAttribute("class", "heart animated heartBeat slower");
   }
 
   // re-render the like count.
@@ -167,12 +174,14 @@ function sortGridItems(property, direction) {
 // =============================================================================
 // Modal Creation
 // =============================================================================
-let modal = document.getElementById("imgModal");
+let modal = document.getElementById("modal-container");
 let closeModalBtn = document.getElementsByClassName("close-modal-btn")[0];
 
-// When the user clicks on close-modal-btn, close the modal.
+// When the user clicks on close-modal-btn, close the modal and "unblur" the grid.
 closeModalBtn.onclick = function() {
   modal.style.display = "none";
+  let gridSection = document.querySelector("#grid-section");
+  gridSection.style.filter = "none";
 }
 
 // When the user clicks anywhere outside of the modal, close the modal.
