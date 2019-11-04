@@ -441,7 +441,7 @@ button {
   }
 
   header nav {
-    margin-right: 100px;
+    margin-right: 50px;
   }
 
   #about-section span.title {
@@ -500,6 +500,11 @@ button {
 
   #about-section div {
     width: 90vw;
+  }
+
+  #grid-section {
+    margin-left: 25px;
+    margin-right: 25px;
   }
 
   /* the two footer spans are split veritically */
