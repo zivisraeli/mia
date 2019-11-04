@@ -1,45 +1,177 @@
-class Item {
-  constructor(id) {
-    this.id = id;
-  }
-}
-
-class GridItem extends Item {
-  constructor(id, src, caption, date, likeCount, isLiked) {
-    super(id);
-    this.src = src;
-    this.caption = caption;
-    this.date = date;
-    this.likeCount = likeCount;
-    this.isLiked = isLiked;
-  }
-}
-
-let gridItems = [
-  new GridItem("id0", "images/mia-id0.jpg", "zMia in the park", "09/18/2019", 15, false),
-  new GridItem("id1", "images/mia-id1.jpg", "dMia in the park", "09/18/2019", 25, false),
-  new GridItem("id2", "images/mia-id2.jpg", "cMia in the park", "09/18/2019", 5, false),
-  new GridItem("id3", "images/miaTry3-400.jpg", "wMia in the park", "09/18/2019", 17, false),
-  new GridItem("id4", "images/miaTry1-600.jpg", "aMia in the park", "09/18/2019", 2, false),
-  new GridItem("id5", "images/miaTry2-450.jpg", "aMia in the park", "09/18/2019", 5, false),
-  new GridItem("id6", "images/miaTry3-400.jpg", "hMia in the park", "09/18/2019", 9, false),
-  new GridItem("id7", "images/miaTry1-600.jpg", "dMia in the park", "09/18/2019", 13, false),
-  new GridItem("id8", "images/miaTry2-450.jpg", "Mia in the park", "09/18/2019", 11, false),
-  new GridItem("id9", "images/miaTry3-400.jpg", "jMia in the park", "09/18/2019", 12, false),
-  new GridItem("id10", "images/miaTry1-600.jpg", "lMia in the park", "09/18/2019", 5, false),
-  new GridItem("id11", "images/miaTry2-450.jpg", "zMia in the park", "09/18/2019", 15, false),
-];
+let state = {};
 
 // =============================================================================
-// Grid Creation
+// Get all state elements
+// =============================================================================
+assignStateElements = () => {
+  state.gridItems = gridItems;
+  state.theGrid = document.querySelector(".the-grid");
+  state.selectSort = document.getElementById('select-sort');
+  state.modalContainer = document.getElementById("modal-container");
+  state.closeModalBtn = document.getElementsByClassName("close-modal-btn")[0];
+  state.gridSection = document.querySelector("#grid-section");
+  state.modalImg = state.modalContainer.querySelector("img");
+  state.headerImg = document.querySelector('#header-img');
+  state.draggedIntoDiv = document.querySelector('header #dragged-into-div');
+  state.draggedImgSrc = '';
+};
+
+// =============================================================================
+// Add all events
+// =============================================================================
+addEvents = () => {
+  // When the user clicks on the 'X' btn, close the modal.
+  state.closeModalBtn.onclick = () => {
+    state.modalContainer.style.display = "none";
+    state.gridSection.style.filter = "none";
+  }
+
+  // When the user clicks anywhere outside of the modal, close the modal.
+  window.onclick = (event) => {
+    if (event.target == state.modalContainer) {
+      state.modalContainer.style.display = "none";
+      state.gridSection.style.filter = "none";
+    }
+  }
+
+  // When the user select a sort option set the cookie and re-rendered the grid.
+  state.selectSort.onchange = (event) => {
+    let inputText = event.target.value;
+    let index = event.target.selectedIndex;
+    switch (index) {
+      case 0:
+        sortGridItems('likes', 1);
+        setCookie('sort', 'likes+1');
+        break;
+      case 1:
+        sortGridItems('likes', -1);
+        setCookie('sort', 'likes-1');
+        break;
+      case 2:
+        sortGridItems('captions', 1);
+        setCookie('sort', 'captions+1');
+        break;
+      case 3:
+        sortGridItems('captions', -1);
+        setCookie('sort', 'captions-1');
+        break;
+      default:
+        break;
+    }
+
+    renderGrid();
+  }
+
+  // By default, data/elements cannot be dropped in other elements. 
+  // To allow a drop we must invoke preventDefault.
+  state.draggedIntoDiv.addEventListener("dragover", (event) => {
+    event.preventDefault();
+  });
+
+  // When the "dragged" image is "dropped" at its target (headerImg) we need to: 
+  // - change the header-img "src" attribute.
+  // - set the headerImgId cookie.
+  // - remove the cue styling.
+  state.draggedIntoDiv.addEventListener("drop", (event) => {
+    state.headerImg.setAttribute("src", state.draggedImgSrc);
+    let imgId = state.draggedImgSrc.match('mia-(.*).jpg')[1];
+    setCookie("headerImgId", imgId);
+    state.headerImg.classList.remove("img-hovered");
+  });
+
+  // When a grid image is dragged into header-image, re-style the header-image for a cue.
+  state.draggedIntoDiv.addEventListener("dragenter", (event) => {
+    event.preventDefault();
+    state.headerImg.classList.add("img-hovered");
+  });
+
+  // If image is dragged outside the div BUT into the image (the image is inside the div)
+  // then it's still considered inside the div and therefor don't remove the cue styling.
+  state.draggedIntoDiv.addEventListener("dragleave", (event) => {
+    let relatedTargetId = event.relatedTarget.id;
+    if (relatedTargetId != 'header-img' && relatedTargetId != 'dragged-into-div') {
+      state.headerImg.classList.remove("img-hovered");
+    }
+  });
+}
+
+// =============================================================================
+// readLikesCookie would read 'likes' cookie and update the state.gridItems array accordingly. 
+// =============================================================================
+readLikesCookie = () => {
+  // read 'likes' cookie
+  likeArray = [];
+  let likeCookie = getCookie('likes');
+  if (likeCookie != null) {
+    likeArray = JSON.parse(likeCookie);
+  }
+  likeArray.forEach((id) => {
+    let gridElem = state.gridItems.find((elem) => {
+      return elem.id === id;
+    });
+    if (gridElem != null) {
+      gridElem.isLiked = true;
+      gridElem.likeCount++;
+    }
+  });
+}
+
+// =============================================================================
+// readSortCookie would read 'sort' cookie, set the selected option and sort the grid items array.
+// =============================================================================
+readSortCookie = () => {
+  // set default values in case there is no cookie yet.
+  let sortAttr = 'likes';
+  let sortDirection = -1;
+  let sortCookie = getCookie('sort');
+  if (sortCookie === null) {
+    sortCookie = "likes-1";
+  } else {
+    let sortArr = sortCookie.match('(.*)([-+]1)');
+    sortAttr = sortArr[1];
+    sortDirection = sortArr[2];
+  }
+
+  // Find the select option element pointed to by the cookie and add 'selected' attribute.
+  // The options carry the same id as the cookie.
+  let selectedOption = document.getElementById(sortCookie);
+  selectedOption.setAttribute("selected", "selected");
+
+  sortGridItems(sortAttr, sortDirection);
+}
+
+// =============================================================================
+// This function takes 2 parameters, compare them and return true or false.
+// Javascript sort function take a "compare" function as a parameter. 
+// =============================================================================
+sortGridItems = (sortByAttr, direction) => {
+  let sortedGridItems = state.gridItems.sort((item1, item2) => {
+    let retVal = 0;
+    if (sortByAttr === "captions") {
+      retVal = item1.caption.toUpperCase() > item2.caption.toUpperCase() ? 1 : -1;
+    } else {
+      retVal = item1.likeCount > item2.likeCount ? 1 : -1;
+    }
+    return retVal * direction;
+  });
+
+  state.gridItems = sortedGridItems;
+}
+
+// =============================================================================
+// Grid rendition.
+// Events for the grid elements must be re-created everytime the grid is rendered after sorting.
+// - Get the grid item that opens the modal
+// - When the user clicks on an grid item, either:
+//    - he clicked on the heart icon - toggle it.
+//    - otherwise open the modal popup. 
 // =============================================================================
 renderGrid = () => {
   // get the grid element and blank it out. 
-  let theGrid = document.querySelector(".the-grid");
-  theGrid.innerHTML = '';
+  state.theGrid.innerHTML = '';
 
-  // loop through the gridItems array and construct the grid.
-  gridItems.forEach((elem, i) => {
+  // loop through the state.gridItems array and construct the grid.
+  state.gridItems.forEach((elem, i) => {
     let id = elem.id;
     let src = elem.src;
     let caption = elem.caption;
@@ -49,7 +181,7 @@ renderGrid = () => {
 
     let heartImg = isLiked ? "images/heartMid3.jpg" : "images/heartOutline1.png";
 
-    theGrid.innerHTML +=
+    state.theGrid.innerHTML +=
       `<figure class="grid-item">
          <img class="grid-image" src="${src}">
          <figcaption>${caption} &nbsp;|&nbsp;
@@ -61,37 +193,26 @@ renderGrid = () => {
        </figure>`;
   });
 
-  // =============================================================================
-  // Events for the grid elements must be re-created everytime the grid is rendered after sorting.
-  // - Get the grid item that opens the modal
-  // - When the user clicks on an grid item, either:
-  //    - he clicked on the heart icon - toggle it.
-  //    - otherwise open the modal popup. 
-  // - since getElementsByClassName return HTMLCollection it needs to be convered to an Array
-  // =============================================================================
+  // Each grid item is attached with the onclick event
+  // which can be either the heart clicked or the image itself.
   let allItems = document.getElementsByClassName("grid-item");
   Array.from(allItems).forEach((gridItem) => {
-
-    // add onclick event to open the model popup
     gridItem.onclick = function(event) {
-      // Manipulate the heart
       if (event.target.className === "heart") {
         toggleHeart(event);
       } else {
-        modal.style.display = "block";
-        let theImgSrc = event.target.src;
-        let targetImg = modal.querySelector("img");
-        targetImg.setAttribute("src", theImgSrc);
-
-        let gridSection = document.querySelector("#grid-section");
-        gridSection.style.filter = "blur(12px)";
+        state.modalContainer.style.display = "block";
+        let targetSrc = event.target.src;
+        state.modalImg.setAttribute("src", targetSrc);
+        state.gridSection.style.filter = "blur(12px)"; // blur the background
       }
     }
 
-    // add the drag events
+    // A dragstart event is attached to every grid's image to capture the src.
     let gridImage = gridItem.querySelector(".grid-image");
-    gridImage.addEventListener("dragstart", dragstart);
-    gridImage.addEventListener("dragend", dragend);
+    gridImage.addEventListener("dragstart", (event) => {
+      state.draggedImgSrc = event.target.src;
+    });
   });
 }
 
@@ -102,11 +223,11 @@ toggleHeart = (event) => {
   // Get the target element based on the target id
   let theTarget = document.getElementById(event.target.id);
 
-  // Based on the target id, find the element in the gridItems and:
+  // Based on the target id, find the element in the state.gridItems and:
   //   - increment or decrement the likeCount.
   //   - toggle the isLiked value.
   //   - render the right icon.
-  let gridItem = gridItems.find((obj) => {
+  let gridItem = state.gridItems.find((obj) => {
     return obj.id === event.target.id;
   });
 
@@ -131,116 +252,7 @@ toggleHeart = (event) => {
 }
 
 // =============================================================================
-// Grid Sorting 
-// =============================================================================
-let selectSort = document.getElementById('select-sort');
-selectSort.onchange = (event) => {
-  let inputText = event.target.value;
-  let index = event.target.selectedIndex;
-  switch (index) {
-    case 0:
-      sortGridItems('likes', 1);
-      setCookie('sort', 'likes+1');
-      break;
-    case 1:
-      sortGridItems('likes', -1);
-      setCookie('sort', 'likes-1');
-      break;
-    case 2:
-      sortGridItems('captions', 1);
-      setCookie('sort', 'captions+1');
-      break;
-    case 3:
-      sortGridItems('captions', -1);
-      setCookie('sort', 'captions-1');
-      break;
-    default:
-      break;
-  }
-
-  renderGrid();
-}
-
-/* The sort function take a "compare" function as a parameter. 
-This function takes 2 parameters, compare them and return true or false. */
-sortGridItems = (sortByAttr, direction) => {
-  let sortedGridItems = gridItems.sort((item1, item2) => {
-    let retVal = 0;
-    if (sortByAttr === "captions") {
-      retVal = item1.caption.toUpperCase() > item2.caption.toUpperCase() ? 1 : -1;
-    } else {
-      retVal = item1.likeCount > item2.likeCount ? 1 : -1;
-    }
-    return retVal * direction;
-  });
-
-  gridItems = sortedGridItems;
-}
-
-// =============================================================================
-// Modal Creation
-// =============================================================================
-let modal = document.getElementById("modal-container");
-let closeModalBtn = document.getElementsByClassName("close-modal-btn")[0];
-
-// When the user clicks on close-modal-btn, close the modal and "unblur" the grid.
-closeModalBtn.onclick = function() {
-  modal.style.display = "none";
-  let gridSection = document.querySelector("#grid-section");
-  gridSection.style.filter = "none";
-}
-
-// When the user clicks anywhere outside of the modal, close the modal.
-window.onclick = function(event) {
-  if (event.target == modal) {
-    modal.style.display = "none";
-  }
-}
-
-// =============================================================================
-// readLikesCookie would read 'likes' cookie and update the gridItems array accordingly. 
-// =============================================================================
-readLikesCookie = () => {
-  // read 'likes' cookie
-  likeArray = [];
-  let likeCookie = getCookie('likes');
-  if (likeCookie != null) {
-    likeArray = JSON.parse(likeCookie);
-  }
-  likeArray.forEach((id) => {
-    let gridElem = gridItems.find((elem) => {
-      return elem.id === id;
-    });
-    if (gridElem != null) {
-      gridElem.isLiked = true;
-      gridElem.likeCount++;
-    }
-  });
-}
-
-readSortCookie = () => {
-  let sortAttr = '';
-  let sortDirection = '';
-  let sortCookie = getCookie('sort');
-  if (sortCookie === null) {
-    sortAttr = 'likes';
-    sortDirection = -1;
-  } else {
-    let sortArr = sortCookie.match('(.*)([-+]1)');
-    sortAttr = sortArr[1];
-    sortDirection = sortArr[2];
-
-    // Find the select option element that and add 'selected' attribute.
-    // The options carry the same id as the cookie.
-    let selectedOption = document.getElementById(sortCookie);
-    selectedOption.setAttribute("selected", "selected");
-  }
-
-  sortGridItems(sortAttr, sortDirection);
-}
-
-// =============================================================================
-// 1. get 'likes' cookie (a string)
+// 1. get 'likes' cookie (a string-ed array)
 // 2. if not empty, JSON-parse it to convert the string to an array. 
 // 3. push or remove (filter) an element based on gridItem.isLiked value.
 // 4. JSON-stringify it to convert the array to a string. 
@@ -266,60 +278,20 @@ updateLikesCookie = (gridItem) => {
 }
 
 // =============================================================================
-// Drag and Drop
+// Initial function invocations
 // =============================================================================
 
-// when the "movable" image is "dropped" at its target (headerImg)
-// we then change the "src" attribute.
-drop = () => {
-  headerImg.setAttribute("src", movableImgSrc);
-  let imgId = movableImgSrc.match('mia-(.*).jpg')[1];
-  setCookie("headerImgId", imgId);
-}
+// Read all frequenly used elements and place them in a state object.
+assignStateElements();
 
-dragover = (event) => {
-  event.preventDefault();
-}
+// Add events to the like btn, pop-up modal, sort select options and drag-and-drop.
+addEvents();
 
-dragenter = (event) => {
-  event.preventDefault();
-  headerImg.classList.add("img-hovered");
-}
-
-// if image is dragged outside the div BUT into the image (the image is inside the div)
-// then it's still considered inside the div and therefor don't remove the hover styling.
-dragleave = (event) => {
-  let relatedTargetId = event.relatedTarget.id;
-  if (relatedTargetId != 'header-img') {
-    headerImg.classList.remove("img-hovered");
-  }
-}
-
-// both, dragstart & dragend happens on the originating element.
-dragend = (event) => {
-  headerImg.classList.remove("img-hovered");
-}
-
-// upon starting, capture the image src of the "movable" image.
-dragstart = (event) => {
-  movableImgSrc = event.target.src;
-}
-
-// get the destination container and attach 2 events to it.
-let movableImgSrc = '';
-let headerImg = document.querySelector('#header-img');
-let draggedIntoDiv = document.querySelector('header #dragged-into-div');
-draggedIntoDiv.addEventListener("dragover", dragover);
-draggedIntoDiv.addEventListener("drop", drop);
-draggedIntoDiv.addEventListener("dragenter", dragenter);
-draggedIntoDiv.addEventListener("dragleave", dragleave);
-
-// =============================================================================
-
-// read 'likes' cookie and update the gridItems array accordingly.
+// read 'likes' cookie and update the state.gridItems array accordingly.
 readLikesCookie();
 
-// read 'sort' cookie and sort the gridItems array accordingly. 
+// Read 'sort' cookie and sort the state.gridItems array accordingly. 
 readSortCookie();
 
+// Now we are ready to render the grid.
 renderGrid();

@@ -49,8 +49,9 @@ header #header-img {
 /* The header image would change it's style upon being dragged into to create a "hint" for the user. 
 the img-hovered class is added and removed upon dragenter() dragleave() events. */
 header #header-img.img-hovered {
-  padding: 2px;
-  border: 2px dotted gray;
+  transition: all 0.5s ease-in-out;
+  width: 150px;
+  padding: 5px;
 }
 
 /* =============================================================================
@@ -110,7 +111,7 @@ main h1 {
   margin-bottom: 5px;
 }
 
-#about-main img {
+#about-main > img {
   border: 1px solid black;
 }
 
@@ -339,7 +340,6 @@ footer img {
 /* =============================================================================
    Fan Form
 ============================================================================= */
-
 #form-header {
   margin: auto;
   width: 500px;
@@ -367,8 +367,12 @@ form div+div {
   margin-top: 1em;
 }
 
+form .required {
+  color: var(--orange-color);
+}
+
 /* since label is an inline element, using inline-block would allow specifying width */
-label {
+form label {
   display: inline-block;
   width: 80px;
   text-align: right;

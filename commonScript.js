@@ -1,6 +1,5 @@
 // =============================================================================
 // cookie related functions
-// with
 // =============================================================================
 getCookie = (name) => {
   // since document.cookie returns all cookie, match would filter out the one I need.
@@ -51,6 +50,11 @@ setHeaderImage = () => {
 }
 
 // =============================================================================
+// Initial function invocations
+// =============================================================================
 
+// Style the top menu's selected entry. 
 currentMenuEntry();
+
+// Set the header's image based on the cookie value.
 setHeaderImage();

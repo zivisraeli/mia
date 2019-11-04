@@ -10,8 +10,7 @@ radioBtns.forEach((btn) => {
 });
 
 // =============================================================================
-// Initially the breedLabel is blurred and the input field is disabled.
-// When it's blurred I give it a color similar to the disabled field #adadaa.
+// When the field is blurred I give it a color similar to the disabled field #adadaa.
 // =============================================================================
 enableBreedField = (value) => {
   let breedLabel = document.querySelector('#dog-breed-label');
@@ -29,5 +28,8 @@ enableBreedField = (value) => {
 }
 
 // =============================================================================
+// Initial function invocations
+// =============================================================================
 
+// Initially the breedLabel is blurred and the input field is disabled.
 enableBreedField(false);
