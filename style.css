@@ -1,6 +1,9 @@
 :root {
   --orange-color: #ffa500;
   --gray-color: #808080;
+  --less-900-margins: 50px;
+  --less-700-margins: 10px;
+  --title-fond-size: calc(15px + 1.5vw);
 }
 
 /* by default, the browser sets some marging. I eliminate it. */
@@ -83,12 +86,16 @@ header nav a {
   text-decoration: none;
   font-family: Oswald;
   font-weight: 100;
-  font-size: calc(15px + 1.5vw);
+  font-size: var(--title-fond-size);
   padding-left: 20px;
   padding-right: 20px;
   color: black;
   height: auto;
   border-right: 2px solid black;
+}
+
+header nav a:last-child {
+    padding-right: 0px;
 }
 
 /* so the last menu entry doesn't have a vertical line */
@@ -108,7 +115,7 @@ main {
 main h1 {
   font-family: Oswald;
   font-weight: 100;
-  font-size: 2.5vw;
+  font-size: var(--title-fond-size);
   margin-top: 5px;
   margin-bottom: 5px;
 }
@@ -220,6 +227,16 @@ hr {
   - grid-gap would set gap between items 
   - the grid determines the WIDTH of the img. Since the imgs are square the HEIGHT would equal the WIDTH.
 ============================================================================= */
+.blurred {
+  filter: blur(12px);
+  transition: all 0.5s ease-in-out;
+}
+
+.un-blurred {
+  filter: none;
+  transition: all 0.5s ease-in-out;
+}
+
 .the-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
@@ -269,7 +286,7 @@ The Modal
 ============================================================================= */
 /* 
    - Initally it's hidden with display:none.
-   - Blurring the rest of the viewport withe background-color.
+   - Blurring the rest of the viewport with background-color.
    - z-index would place the modal on top when active. */
 #modal-container {
   display: none;
@@ -433,7 +450,7 @@ button {
 
   header #dragged-into-div {
     width: 150px;
-    left: 50px;
+    left: var(--less-900-margins);
   }
 
   header #dragged-into-div #header-img {
@@ -441,7 +458,7 @@ button {
   }
 
   header nav {
-    margin-right: 50px;
+    margin-right: var(--less-900-margins);
   }
 
   #about-section span.title {
@@ -453,8 +470,8 @@ button {
   }
 
   #grid-section {
-    margin-left: 50px;
-    margin-right: 50px;
+    margin-left: var(--less-900-margins);
+    margin-right: var(--less-900-margins);
   }
 
   #form-header {
@@ -487,7 +504,7 @@ button {
 
   header #dragged-into-div {
     width: 125px;
-    left: 25px;
+    left: var(--less-700-margins);
   }
 
   header #dragged-into-div #header-img {
@@ -495,7 +512,7 @@ button {
   }
 
   header nav {
-    margin-right: 25px;
+    margin-right: var(--less-700-margins);
   }
 
   #about-section div {
@@ -503,8 +520,8 @@ button {
   }
 
   #grid-section {
-    margin-left: 25px;
-    margin-right: 25px;
+    margin-left: var(--less-700-margins);
+    margin-right: var(--less-700-margins);
   }
 
   /* the two footer spans are split veritically */

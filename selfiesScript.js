@@ -23,14 +23,16 @@ addEvents = () => {
   // When the user clicks on the 'X' btn, close the modal.
   state.closeModalBtn.onclick = () => {
     state.modalContainer.style.display = "none";
-    state.gridSection.style.filter = "none";
+    state.gridSection.classList.remove("blurred");
+    state.gridSection.classList.add("un-blurred");
   }
 
   // When the user clicks anywhere outside of the modal, close the modal.
   window.onclick = (event) => {
     if (event.target == state.modalContainer) {
       state.modalContainer.style.display = "none";
-      state.gridSection.style.filter = "none";
+      state.gridSection.classList.remove("blurred");
+      state.gridSection.classList.add("un-blurred");
     }
   }
 
@@ -204,7 +206,8 @@ renderGrid = () => {
         state.modalContainer.style.display = "block";
         let targetSrc = event.target.src;
         state.modalImg.setAttribute("src", targetSrc);
-        state.gridSection.style.filter = "blur(12px)"; // blur the background
+        state.gridSection.classList.remove("un-blurred");
+        state.gridSection.classList.add("blurred");
       }
     }
 
