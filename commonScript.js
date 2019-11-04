@@ -28,6 +28,8 @@ currentMenuEntry = () => {
     anchor = document.querySelector('nav span#selfies');
   } else if (pageName.includes("fans.html")) {
     anchor = document.querySelector('nav span#fans');
+  } else {
+    anchor = document.querySelector('nav span#index');
   }
   anchor.style.textShadow = '1px 1px 4px gray';
 }

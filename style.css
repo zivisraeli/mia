@@ -1,5 +1,6 @@
 :root {
   --orange-color: #ffa500;
+  --gray-color: #808080;
 }
 
 /* by default, the browser sets some marging. I eliminate it. */
@@ -19,36 +20,37 @@ header {
   position: sticky;
   top: 0;
   background: linear-gradient(to right, orange, yellow);
-  border-top: 1px solid gray;
-  border-bottom: 1px solid gray;
+  border-top: 1px solid var(--gray-color);
+  border-bottom: 1px solid var(--gray-color);
   width: 100%;
   height: 95px;
   z-index: 1;
 }
 
-/* This is an "invisble div". it's used to "widen" the area into which images can be dropped into
+/* This is an "invisble div". It's used to enlarge the area into which images can be dropped into
 (to replace the header's image). Otherwise, the user would have to aim exactly at the circular image. */
 header #dragged-into-div {
+  position: absolute;
+  top: 5px;
+  left: 150px;
   width: 200px;
   height: 200px;
-  position: absolute;
-  top: 0;
-  left: 150px;
 }
 
-/* header-img's border-radius makes the image round. 
-   The image also has a border assigned by the javascript. */
-header #header-img {
-  width: 125px;
-  border-radius: 50%;
+/* - The element is placed relative to it's containing container at 0,0.
+   - The border-radius makes the image round. 
+   - The image also has a border, but it's assigned by the javascript. */
+header #dragged-into-div #header-img {
   position: absolute;
   left: 0px;
-  top: 5px;
+  top: 0px;
+  width: 125px;
+  border-radius: 50%;
 }
 
 /* The header image would change it's style upon being dragged into to create a "hint" for the user. 
 the img-hovered class is added and removed upon dragenter() dragleave() events. */
-header #header-img.img-hovered {
+header #dragged-into-div #header-img.img-hovered {
   transition: all 0.5s ease-in-out;
   width: 150px;
   padding: 5px;
@@ -197,7 +199,7 @@ The Grid
 
 /* I chose box-shadow rather then border manipulation to avoid "jitter" */
 #select-div select:hover {
-  box-shadow: 0 0 2px 2px gray;
+  box-shadow: 0 0 2px 2px var(--gray-color);
   cursor: pointer;
 }
 
@@ -320,8 +322,9 @@ footer {
   text-align: center;
   height: 30px;
   line-height: 30px;
-  border-top: 1px solid gray;
+  border-top: 1px solid var(--gray-color);
   margin-top: 50px;
+  background-color: #d3d3d3;
 }
 
 /* The 1st and last spans r styled 'italic' yet the divider char is not. */
@@ -429,7 +432,12 @@ button {
   }
 
   header #dragged-into-div {
+    width: 150px;
     left: 50px;
+  }
+
+  header #dragged-into-div #header-img {
+    width: 105px;
   }
 
   header nav {
@@ -479,6 +487,18 @@ button {
 }
 
 @media screen and (max-width: 700px) {
+  header {
+    height: 75px;
+  }
+  header #dragged-into-div {
+    width: 125px;
+    left: 25px;
+  }
+
+  header #dragged-into-div #header-img {
+    width: 85px;
+  }
+
   #about-section div {
     width: 90vw;
   }
