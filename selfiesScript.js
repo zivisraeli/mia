@@ -10,17 +10,35 @@
    state.modalCotainerDiv = document.getElementById("modal-container-div");
    state.modalContentDiv = document.getElementById("modal-content-div");
    state.modalImg = state.modalCotainerDiv.querySelector("img");
+   state.modelImgIndex = 0;
    state.closeModalBtn = document.getElementsByClassName("close-modal-btn")[0];
    state.gridSection = document.querySelector("#grid-section");
    state.headerImg = document.querySelector('#header-img');
    state.draggedIntoDiv = document.querySelector('header #dragged-into-div');
    state.draggedImgSrc = '';
+   state.nextBtn = document.getElementById("next-btn");
+   state.previousBtn = document.getElementById("prev-btn");
  };
 
  // =============================================================================
- // Add all events
+ // Add all events.
+ // The events related to open a modal are attached to each image during rendering.
  // =============================================================================
  addEvents = () => {
+  state.nextBtn.onclick = () => {
+    let theNextIndex = (state.modelImgIndex+1) === state.gridItems.length ? 0 : state.modelImgIndex+1;
+    let theElem = state.gridItems[theNextIndex];
+    let theSrc = theElem.src;
+    renderModalImg(theSrc);
+  }
+
+    state.previousBtn.onclick = () => {
+    let thePreviousIndex = state.modelImgIndex === 0 ? state.gridItems.length-1 : state.modelImgIndex-1;
+    let theElem = state.gridItems[thePreviousIndex];
+    let theSrc = theElem.src;
+    renderModalImg(theSrc);
+  }
+
    // When the user clicks on the 'X' btn, close the modal.
    state.closeModalBtn.onclick = () => {
      state.modalCotainerDiv.style.display = "none";
@@ -162,6 +180,41 @@
  }
 
  // =============================================================================
+ // renderModalImg would render the clicked img inside the modal div.
+ // =============================================================================
+ renderModalImg = (imgSrc) => {
+   let arrSrc = imgSrc.match('(.*mia-).*-(.*)(\.jpg$)');
+   let modalImgSrc = arrSrc[1] + arrSrc[2] + arrSrc[3];
+   state.modalImg.setAttribute("src", modalImgSrc);
+
+   // I save the index of the selected img for the next/previous operations
+   // so I can simply go to the next/previous element inthe gridItems array. 
+   let selectedImgId = arrSrc[2];
+   state.modelImgIndex = state.gridItems.findIndex((element) => {
+     return element.id === selectedImgId;
+   });
+
+   // Upon loading the img I need to get its "natural" size.
+   // Since I place the modal-content-div 110px from the top it's not included in the vp Height. 
+   // Yet, the max width of an image would be 75% of the vp. 
+   state.modalImg.onload = function() {
+     let imgW = state.modalImg.naturalWidth;
+     let imgH = state.modalImg.naturalHeight;
+     let vpW = document.documentElement.clientWidth;
+     let vpH = document.documentElement.clientHeight - 110;
+     let imgPropotion = imgW / imgH;
+     let vpPropotion = vpW / vpH;
+     let newW = imgPropotion * vpH;
+     let maxImgW = vpW * 0.75;
+     newW = newW > maxImgW ? maxImgW : newW;
+     state.modalContentDiv.style.width = newW + "px";
+
+     // Finally, display it. 
+     state.modalCotainerDiv.style.display = "block";
+   }
+ }
+
+ // =============================================================================
  // Grid rendition.
  // Events for the grid elements must be re-created everytime the grid is rendered after sorting.
  // - Get the grid item that opens the modal
@@ -182,54 +235,36 @@
      let date = elem.date;
      let isLiked = elem.isLiked;
 
-     let heartImg = isLiked ? "images/heartMid3.jpg" : "images/heartOutline1.png";
+     let heartImg = isLiked ? "images/heartFull.jpg" : "images/heartOutline.png";
 
      state.theGrid.innerHTML +=
        `<figure class="grid-item">
          <img class="grid-image" src="${src}">
          <figcaption>${caption} &nbsp;|&nbsp;
                      <span id="like-count-span">${likeCount}</span>&nbsp;
-                     <img src="images/heartMid2.jpg" style="width:15px"/>\'s&nbsp;|&nbsp;
+                     <img src="images/heartLikes.jpg" style="width:15px"/>\'s&nbsp;|&nbsp;
                      ${date}&nbsp;
          </figcaption>
          <img class="heart" id="${id}" src=${heartImg} style="width:15px"/>
        </figure>`;
    });
 
-   // Each grid item is attached with the onclick event which can be either the heart clicked or the image itself.
-   // The large-image-src name is derived from the grid-image-src name. 
+   // Each grid item is attached with the onclick event.
+   // The event is can be either:
+   //   - the heart clicked or 
+   //   - the image itself (for a modal popup).
    let allItems = document.getElementsByClassName("grid-item");
    Array.from(allItems).forEach((gridItem) => {
      gridItem.onclick = function(event) {
-       if (event.target.className === "heart") {
+       if (event.target.className.startsWith("heart")) {
          toggleHeart(event);
        } else {
-
          let gridImgSrc = event.target.src;
-         let arrSrc = gridImgSrc.match('(.*mia-).*-(.*$)');
-         let largeImgSrc = arrSrc[1] + arrSrc[2];
-         state.modalImg.setAttribute("src", largeImgSrc);
+         renderModalImg(gridImgSrc);
+
+         // blur the grid background.
          state.gridSection.classList.remove("un-blurred");
          state.gridSection.classList.add("blurred");
-
-         // Upon loading the img I need to get its "natural" size.
-         // Since I place the modal-content-div 110px from the top it's not included in the vp Height. 
-         // Yet, the max width of an image would be 75% of the vp. 
-         state.modalImg.onload = function() {
-           let imgW = state.modalImg.naturalWidth;
-           let imgH = state.modalImg.naturalHeight;
-           let vpW = document.documentElement.clientWidth;
-           let vpH = document.documentElement.clientHeight - 110;            
-           let imgPropotion = imgW / imgH;
-           let vpPropotion = vpW / vpH;
-           let newW = imgPropotion * vpH;
-           let maxImgW = vpW * 0.75;
-           newW = newW > maxImgW ? maxImgW : newW;
-           state.modalContentDiv.style.width = newW + "px";
-
-           // Finally, display it. 
-           state.modalCotainerDiv.style.display = "block";
-         }
        }
      }
 
@@ -241,6 +276,8 @@
    });
  }
 
+
+
  // =============================================================================
  // Like Toggling 
  // =============================================================================
@@ -249,9 +286,9 @@
    let theTarget = document.getElementById(event.target.id);
 
    // Based on the target id, find the element in the state.gridItems and:
-   //   - increment or decrement the likeCount.
    //   - toggle the isLiked value.
-   //   - render the right icon.
+   //   - increment/decrement the likeCount.
+   //   - render the right icon with/without the animation.
    let gridItem = state.gridItems.find((obj) => {
      return obj.id === event.target.id;
    });
@@ -259,11 +296,12 @@
    if (gridItem.isLiked) {
      gridItem.isLiked = false;
      gridItem.likeCount--;
-     theTarget.setAttribute("src", "images/heartOutline1.png");
+     theTarget.setAttribute("src", "images/heartOutline.png");
+     theTarget.setAttribute("class", "heart");
    } else {
      gridItem.isLiked = true;
      gridItem.likeCount++;
-     theTarget.setAttribute("src", "images/heartMid3.jpg");
+     theTarget.setAttribute("src", "images/heartFull.jpg");
      theTarget.setAttribute("class", "heart animated heartBeat slower");
    }
 

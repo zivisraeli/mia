@@ -5,6 +5,7 @@
   <title>Mia's Selfies</title>
   <link rel="stylesheet" type="text/css" href="style.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.7.2/animate.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Oswald">
   <meta name="viewport" content="width=device-width, initial-scale=1">
 </head>
@@ -54,18 +55,24 @@
     </footer>
   </main>
   <!-- The modal has 3 divs:
-         - modal-container is 100% wide and eclipses the background
-         - modal-content is necessary to position the X btn properly.
-         - modal-img carries the image properties.
+         - modal-container-div is 100% wide and contains the image div & buttons.
+         - modal-content-div contains the image and the X char. Size is set in the script.
+         - modal-img-div carries the image properties.
        The img's src & size is determined in the script. 
   -->
   <div id="modal-container-div">
+    <button id="prev-btn" class="button">
+      <i class="fa fa-arrow-circle-left" /></i>&nbsp;&nbsp;Previous
+    </button>
     <div id="modal-content-div">
       <span class="close-modal-btn">&times;</span>
       <div id="modal-img-div">
         <img src="" />
       </div>
     </div>
+    <button id="next-btn" class="button">
+      Next&nbsp;&nbsp;<i class="fa fa-arrow-circle-right" /></i>
+    </button>
   </div>
 </body>
 <!-- Javascripts -->
