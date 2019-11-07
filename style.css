@@ -4,6 +4,8 @@
   --less-900-margins: 50px;
   --less-700-margins: 10px;
   --title-fond-size: calc(15px + 1.5vw);
+  --slow-transition: all 0.5s ease-in;
+  --fast-transition: all 0.2s ease-in;
 }
 
 /* by default, the browser sets some marging. I eliminate it. */
@@ -54,7 +56,7 @@ header #dragged-into-div #header-img {
 /* The header image would change it's style upon being dragged into to create a "hint" for the user. 
 the img-hovered class is added and removed upon dragenter() dragleave() events. */
 header #dragged-into-div #header-img.img-hovered {
-  transition: all 0.5s ease-in-out;
+  transition: var(--slow-transition);
   width: 150px;
   padding: 5px;
 }
@@ -95,7 +97,7 @@ header nav a {
 }
 
 header nav a:last-child {
-    padding-right: 0px;
+  padding-right: 0px;
 }
 
 /* so the last menu entry doesn't have a vertical line */
@@ -229,12 +231,12 @@ hr {
 ============================================================================= */
 .blurred {
   filter: blur(12px);
-  transition: all 0.5s ease-in-out;
+  transition: var(--fast-transition);
 }
 
 .un-blurred {
   filter: none;
-  transition: all 0.5s ease-in-out;
+  transition: var(--fast-transition);
 }
 
 .the-grid {
@@ -259,7 +261,7 @@ hr {
 
 /* would transition all properties that their valued changed (trans, color, shadow) */
 .grid-item:hover {
-  transition: all 0.5s ease-in-out;
+  transition: var(--slow-transition);
   trans#old-form: scale(1.1);
   background-color: #ffa500;
   box-shadow: 10px 10px 5px rgba(0, 0, 0, 0.33);
@@ -288,31 +290,29 @@ The Modal
    - Initally it's hidden with display:none.
    - Blurring the rest of the viewport with background-color.
    - z-index would place the modal on top when active. */
-#modal-container {
+#modal-container-div {
   display: none;
   position: fixed;
   z-index: 1;
   left: 0;
   top: 0;
   width: 100%;
-  height: 100%;
 }
 
-/* Modal Content, img */
-#modal-content {
+/* Modal Content width is determined in the Javascript based on the img propotions. */
+#modal-content-div {
   position: relative;
-  top: 110px;
-  background-color: #fefefe;
+  top: 97px;
   margin: auto;
-  width: 25vw;
+  background-color: #fefefe;
 }
 
-#modal-img {
+#modal-img-div {
   padding: 25px 25px 25px 25px;
 }
 
 /* Modal image should be the width of the containing div */
-#modal-img img {
+#modal-img-div img {
   width: 100%;
   border: 1px solid black;
 }
@@ -524,8 +524,13 @@ button {
     margin-right: var(--less-700-margins);
   }
 
+  #modal-content-div {
+    width: 90vw;
+  }
+
   /* the two footer spans are split veritically */
   footer {
+    height: 40px;
     line-height: 20px;
   }
 
