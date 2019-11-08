@@ -18,6 +18,9 @@
    state.draggedImgSrc = '';
    state.nextBtn = document.getElementById("next-btn");
    state.previousBtn = document.getElementById("prev-btn");
+   state.spinnerDiv = document.getElementById("spinner-div");
+   state.selectDiv = document.getElementById("select-div");
+   state.counter = 0;
  };
 
  // =============================================================================
@@ -25,19 +28,20 @@
  // The events related to open a modal are attached to each image during rendering.
  // =============================================================================
  addEvents = () => {
-  state.nextBtn.onclick = () => {
-    let theNextIndex = (state.modelImgIndex+1) === state.gridItems.length ? 0 : state.modelImgIndex+1;
-    let theElem = state.gridItems[theNextIndex];
-    let theSrc = theElem.src;
-    renderModalImg(theSrc);
-  }
 
-    state.previousBtn.onclick = () => {
-    let thePreviousIndex = state.modelImgIndex === 0 ? state.gridItems.length-1 : state.modelImgIndex-1;
-    let theElem = state.gridItems[thePreviousIndex];
-    let theSrc = theElem.src;
-    renderModalImg(theSrc);
-  }
+   state.nextBtn.onclick = () => {
+     let theNextIndex = (state.modelImgIndex + 1) === state.gridItems.length ? 0 : state.modelImgIndex + 1;
+     let theElem = state.gridItems[theNextIndex];
+     let theSrc = theElem.src;
+     renderModalImg(theSrc);
+   }
+
+   state.previousBtn.onclick = () => {
+     let thePreviousIndex = state.modelImgIndex === 0 ? state.gridItems.length - 1 : state.modelImgIndex - 1;
+     let theElem = state.gridItems[thePreviousIndex];
+     let theSrc = theElem.src;
+     renderModalImg(theSrc);
+   }
 
    // When the user clicks on the 'X' btn, close the modal.
    state.closeModalBtn.onclick = () => {
@@ -46,14 +50,34 @@
      state.gridSection.classList.add("un-blurred");
    }
 
-   // When the user clicks anywhere outside of the modal, close the modal.
+   // Onclick events that are related to each grid's image:
+   //   - like/unlike an image.
+   //   - open popup modal image.
+   //   - unblur the grid background upon closing a modal. 
    window.onclick = (event) => {
-     if (event.target == state.modalCotainerDiv) {
+     let clickedElemClass = event.target.className;
+     if (clickedElemClass === "heart") {
+       toggleHeart(event);
+     } else if (clickedElemClass === "grid-image" || clickedElemClass === "figcaption") {
+       let gridImgSrc = event.target.src;
+       renderModalImg(gridImgSrc);
+       // blur the grid background.
+       state.gridSection.classList.remove("un-blurred");
+       state.gridSection.classList.add("blurred");
+     } else {
        state.modalCotainerDiv.style.display = "none";
        state.gridSection.classList.remove("blurred");
        state.gridSection.classList.add("un-blurred");
      }
    }
+
+   // Drag-and-drop events.
+   state.theGrid.addEventListener("dragstart", (event) => {
+     let clickedElemClass = event.target.className;
+     if (clickedElemClass === "grid-image") {
+       state.draggedImgSrc = event.target.src;
+     }
+   });
 
    // When the user select a sort option set the cookie and re-rendered the grid.
    state.selectSort.onchange = (event) => {
@@ -138,7 +162,11 @@
  }
 
  // =============================================================================
- // readSortCookie would read 'sort' cookie, set the selected option and sort the grid items array.
+ // readSortCookie would:
+ // - read 'sort' cookie 
+ // - set the selected option.
+ // - make the select-div visible (to avoid jitter).
+ // - sort the grid items array.
  // =============================================================================
  readSortCookie = () => {
    // set default values in case there is no cookie yet.
@@ -157,6 +185,7 @@
    // The options carry the same id as the cookie.
    let selectedOption = document.getElementById(sortCookie);
    selectedOption.setAttribute("selected", "selected");
+   state.selectDiv.style.visibility = "visible";
 
    sortGridItems(sortAttr, sortDirection);
  }
@@ -240,7 +269,7 @@
      state.theGrid.innerHTML +=
        `<figure class="grid-item">
          <img class="grid-image" src="${src}">
-         <figcaption>${caption} &nbsp;|&nbsp;
+         <figcaption class="figcaption">${caption} &nbsp;|&nbsp;
                      <span id="like-count-span">${likeCount}</span>&nbsp;
                      <img src="images/heartLikes.jpg" style="width:15px"/>\'s&nbsp;|&nbsp;
                      ${date}&nbsp;
@@ -249,34 +278,24 @@
        </figure>`;
    });
 
-   // Each grid item is attached with the onclick event.
-   // The event is can be either:
-   //   - the heart clicked or 
-   //   - the image itself (for a modal popup).
-   let allItems = document.getElementsByClassName("grid-item");
-   Array.from(allItems).forEach((gridItem) => {
-     gridItem.onclick = function(event) {
-       if (event.target.className.startsWith("heart")) {
-         toggleHeart(event);
-       } else {
-         let gridImgSrc = event.target.src;
-         renderModalImg(gridImgSrc);
-
-         // blur the grid background.
-         state.gridSection.classList.remove("un-blurred");
-         state.gridSection.classList.add("blurred");
-       }
-     }
-
-     // A dragstart event is attached to every grid's image to capture the src.
-     let gridImage = gridItem.querySelector(".grid-image");
-     gridImage.addEventListener("dragstart", (event) => {
-       state.draggedImgSrc = event.target.src;
+   // Since it takes some time to load the images there is some "jitter".
+   // To avoid it:
+   //   - Initially, the grid section is hidden. 
+   //   - The spinner-div is a visible spinner. 
+   //   - Each image, upon loading, would increment state.counter
+   //   - Once the counter === the array size the grid section becomes visible and the spinner-div is removed. 
+   let allImgs = state.theGrid.querySelectorAll(".grid-image");
+   allImgs.forEach((elem) => {
+     elem.addEventListener("load", (event) => {
+        state.counter++;
+        if (state.counter === state.gridItems.length) {
+          state.theGrid.style.visibility = "visible";
+          state.spinnerDiv.parentNode.removeChild(state.spinnerDiv);          
+          state.counter = 0;
+        }
      });
    });
  }
-
-
 
  // =============================================================================
  // Like Toggling 

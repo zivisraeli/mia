@@ -28,7 +28,7 @@
       <ul>
         <li>
           Sort Images By:
-          <div id="select-div">
+          <div id="select-div" style="visibility: hidden;">
             <select id="select-sort">
               <option id="likes+1">Like number; Asc.</option>
               <option id="likes-1">Like number; Desc.</option>
@@ -43,8 +43,8 @@
         <li>Your choices are permanently stored on your local device.</li>
       </ul>
       <hr>
-      <div class="the-grid">
-      </div>
+      <div id="spinner-div" class="lds-ripple"><div></div><div></div></div>
+      <div class="the-grid" style="visibility: hidden;"></div>
     </section>
     <footer>
       <span>Disclaimer: This site is using cookies.</span>
