@@ -209,6 +209,7 @@ The Grid
   border-radius: .2em;
   font-size: 13px;
   background: linear-gradient(to bottom, #ffffff, orange);
+  outline: none;
 }
 
 /* I chose box-shadow rather then border manipulation to avoid "jitter" */
@@ -310,13 +311,18 @@ The Modal
   position: absolute;
   top: 50%;
   height: 30px;
+    width: 100px;
   background-color: var(--orange-color);
   border: 1px solid black;
+  font-size: 15px;
+  font-weight: 400;
+  font-family: calibri;
   outline: none;
 }
 
 #modal-container-div .button:hover {
   box-shadow: 1px 1px 4px black;
+  font-weight: 600;
 }
 
 #modal-container-div #prev-btn {

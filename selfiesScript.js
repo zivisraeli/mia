@@ -25,25 +25,31 @@
 
  // =============================================================================
  // Add all events.
- // The events related to open a modal are attached to each image during rendering.
  // =============================================================================
  addEvents = () => {
 
-   state.nextBtn.onclick = () => {
+   // Modal's next/previous buttons.
+   state.nextBtn.onclick = (event) => {
      let theNextIndex = (state.modelImgIndex + 1) === state.gridItems.length ? 0 : state.modelImgIndex + 1;
      let theElem = state.gridItems[theNextIndex];
      let theSrc = theElem.src;
      renderModalImg(theSrc);
+
+     // So it won't bubble into window.onclick().
+     event.stopPropagation();
    }
 
-   state.previousBtn.onclick = () => {
+   state.previousBtn.onclick = (event) => {
      let thePreviousIndex = state.modelImgIndex === 0 ? state.gridItems.length - 1 : state.modelImgIndex - 1;
      let theElem = state.gridItems[thePreviousIndex];
      let theSrc = theElem.src;
      renderModalImg(theSrc);
+
+     // So it won't bubble into window.onclick().
+     event.stopPropagation();
    }
 
-   // When the user clicks on the 'X' btn, close the modal.
+   // Modal's close button.
    state.closeModalBtn.onclick = () => {
      state.modalCotainerDiv.style.display = "none";
      state.gridSection.classList.remove("blurred");
@@ -71,6 +77,33 @@
      }
    }
 
+   // Select + options events. Upon selecting an option:
+   // - sort the array.
+   // - set the cookie.
+   // - re-render the grid. 
+   state.selectSort.onchange = (event) => {
+     let selectedIndex = event.target.selectedIndex;
+     let selectedOptionId = event.target[selectedIndex].id;
+     switch (selectedOptionId) {
+       case 'likes+1':
+         sortGridItems('likes', 1);
+         break;
+       case 'likes-1':
+         sortGridItems('likes', -1);
+         break;
+       case 'captions+1':
+         sortGridItems('captions', 1);
+         break;
+       case 'captions-1':
+         sortGridItems('captions', -1);
+         break;
+       default:
+         break;
+     }
+     setCookie('sort', selectedOptionId);
+     renderGrid();
+   }
+
    // Drag-and-drop events.
    state.theGrid.addEventListener("dragstart", (event) => {
      let clickedElemClass = event.target.className;
@@ -78,34 +111,6 @@
        state.draggedImgSrc = event.target.src;
      }
    });
-
-   // When the user select a sort option set the cookie and re-rendered the grid.
-   state.selectSort.onchange = (event) => {
-     let inputText = event.target.value;
-     let index = event.target.selectedIndex;
-     switch (index) {
-       case 0:
-         sortGridItems('likes', 1);
-         setCookie('sort', 'likes+1');
-         break;
-       case 1:
-         sortGridItems('likes', -1);
-         setCookie('sort', 'likes-1');
-         break;
-       case 2:
-         sortGridItems('captions', 1);
-         setCookie('sort', 'captions+1');
-         break;
-       case 3:
-         sortGridItems('captions', -1);
-         setCookie('sort', 'captions-1');
-         break;
-       default:
-         break;
-     }
-
-     renderGrid();
-   }
 
    // By default, data/elements cannot be dropped in other elements. 
    // To allow a drop we must invoke preventDefault.
@@ -278,23 +283,26 @@
        </figure>`;
    });
 
-   // Since it takes some time to load the images there is some "jitter".
-   // To avoid it:
-   //   - Initially, the grid section is hidden. 
-   //   - The spinner-div is a visible spinner. 
-   //   - Each image, upon loading, would increment state.counter
-   //   - Once the counter === the array size the grid section becomes visible and the spinner-div is removed. 
-   let allImgs = state.theGrid.querySelectorAll(".grid-image");
-   allImgs.forEach((elem) => {
-     elem.addEventListener("load", (event) => {
-        state.counter++;
-        if (state.counter === state.gridItems.length) {
-          state.theGrid.style.visibility = "visible";
-          state.spinnerDiv.parentNode.removeChild(state.spinnerDiv);          
-          state.counter = 0;
-        }
+
+   if (state.spinnerDiv != null) {
+     // Since it takes some time to load the images there is some "jitter".
+     // To avoid it:
+     //   - Initially, the grid section is hidden. 
+     //   - The spinner-div is a visible spinner. 
+     //   - Each image, upon loading, would increment state.counter
+     //   - Once the counter === the array size the grid section becomes visible and the spinner-div is removed. 
+     let allImgs = state.theGrid.querySelectorAll(".grid-image");
+     allImgs.forEach((elem) => {
+       elem.addEventListener("load", (event) => {
+         state.counter++;
+         if (state.counter === state.gridItems.length) {
+           state.theGrid.style.visibility = "visible";
+           state.spinnerDiv.parentNode.removeChild(state.spinnerDiv);
+           state.spinnerDiv = null;
+         }
+       });
      });
-   });
+   }
  }
 
  // =============================================================================
