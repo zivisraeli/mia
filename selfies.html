@@ -23,12 +23,12 @@
     </nav>
   </header>
   <main>
-    <section id="grid-section" class="grid-section">
+    <section id="grid-section" class="grid-section middle-section">
       <h1>Some of my best selfies!</h1>
       <ul>
         <li>
           Sort Images By:
-          <div id="select-div" style="visibility: hidden;">
+          <div id="select-option-div" style="visibility: hidden;">
             <select id="select-sort">
               <option id="likes+1">Like number; Asc.</option>
               <option id="likes-1">Like number; Desc.</option>
@@ -43,17 +43,20 @@
         <li>Your choices are permanently stored on your local device.</li>
       </ul>
       <hr>
-      <div id="spinner-div" class="lds-ripple"><div></div><div></div></div>
-      <div class="the-grid" style="visibility: hidden;"></div>
+      <div id="spinner-div" class="lds-ripple">
+        <div></div>
+        <div></div>
+      </div>
+      <div class="dynamic-grid" style="visibility: hidden;"></div>
     </section>
-    <footer>
-      <span>Disclaimer: This site is using cookies.</span>
-      <span id="footer-divider">&nbsp;&nbsp;|&nbsp;&nbsp;</span>
-      <span id="footer-copyright">COPYRIGHTS &copy; 2019 Mia Israeli All Rights Reserved.
-        <img src="images/paw2.png" />
-      </span>
-    </footer>
   </main>
+  <footer>
+    <span>Disclaimer: This site is using cookies.</span>
+    <span id="footer-divider">&nbsp;&nbsp;|&nbsp;&nbsp;</span>
+    <span id="footer-copyright">COPYRIGHTS &copy; 2019 Mia Israeli All Rights Reserved.
+      <img src="images/paw2.png" />
+    </span>
+  </footer>
   <!-- The modal has 3 divs:
          - modal-container-div is 100% wide and contains the image div & buttons.
          - modal-content-div contains the image and the X char. Size is set in the script.

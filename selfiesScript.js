@@ -5,21 +5,27 @@
  // =============================================================================
  assignStateElements = () => {
    state.gridItems = gridItems;
-   state.theGrid = document.querySelector(".the-grid");
-   state.selectSort = document.getElementById('select-sort');
+   state.dynamicGrid = document.querySelector(".dynamic-grid");
+   state.gridSection = document.querySelector("#grid-section");
    state.modalCotainerDiv = document.getElementById("modal-container-div");
    state.modalContentDiv = document.getElementById("modal-content-div");
    state.modalImg = state.modalCotainerDiv.querySelector("img");
-   state.modelImgIndex = 0;
    state.closeModalBtn = document.getElementsByClassName("close-modal-btn")[0];
-   state.gridSection = document.querySelector("#grid-section");
+
+   // used by the next/previous img btn. 
+   state.modalImgIndex = 0;
+
+   // is assigned the onchange event.
+   state.selectSort = document.getElementById('select-sort');
+
+   // the target of drag operation.
    state.headerImg = document.querySelector('#header-img');
    state.draggedIntoDiv = document.querySelector('header #dragged-into-div');
    state.draggedImgSrc = '';
    state.nextBtn = document.getElementById("next-btn");
    state.previousBtn = document.getElementById("prev-btn");
    state.spinnerDiv = document.getElementById("spinner-div");
-   state.selectDiv = document.getElementById("select-div");
+   state.selectOptionDiv = document.getElementById("select-option-div");
    state.counter = 0;
  };
 
@@ -30,7 +36,7 @@
 
    // Modal's next/previous buttons.
    state.nextBtn.onclick = (event) => {
-     let theNextIndex = (state.modelImgIndex + 1) === state.gridItems.length ? 0 : state.modelImgIndex + 1;
+     let theNextIndex = (state.modalImgIndex + 1) === state.gridItems.length ? 0 : state.modalImgIndex + 1;
      let theElem = state.gridItems[theNextIndex];
      let theSrc = theElem.src;
      renderModalImg(theSrc);
@@ -40,7 +46,7 @@
    }
 
    state.previousBtn.onclick = (event) => {
-     let thePreviousIndex = state.modelImgIndex === 0 ? state.gridItems.length - 1 : state.modelImgIndex - 1;
+     let thePreviousIndex = state.modalImgIndex === 0 ? state.gridItems.length - 1 : state.modalImgIndex - 1;
      let theElem = state.gridItems[thePreviousIndex];
      let theSrc = theElem.src;
      renderModalImg(theSrc);
@@ -58,22 +64,23 @@
 
    // Onclick events that are related to each grid's image:
    //   - like/unlike an image.
-   //   - open popup modal image.
-   //   - unblur the grid background upon closing a modal. 
+   //   - render popup modal image and blur the background. 
+   //   - if the modal is ON, then unblur the grid background upon closing a modal. 
    window.onclick = (event) => {
      let clickedElemClass = event.target.className;
-     if (clickedElemClass === "heart") {
+     if (clickedElemClass.startsWith("heart")) {
        toggleHeart(event);
-     } else if (clickedElemClass === "grid-image" || clickedElemClass === "figcaption") {
+     } else if (clickedElemClass.startsWith("grid-image")) {
        let gridImgSrc = event.target.src;
        renderModalImg(gridImgSrc);
-       // blur the grid background.
        state.gridSection.classList.remove("un-blurred");
        state.gridSection.classList.add("blurred");
      } else {
-       state.modalCotainerDiv.style.display = "none";
-       state.gridSection.classList.remove("blurred");
-       state.gridSection.classList.add("un-blurred");
+       if (state.modalCotainerDiv.style.display === "block") {
+         state.modalCotainerDiv.style.display = "none";
+         state.gridSection.classList.remove("blurred");
+         state.gridSection.classList.add("un-blurred");
+       }
      }
    }
 
@@ -105,7 +112,7 @@
    }
 
    // Drag-and-drop events.
-   state.theGrid.addEventListener("dragstart", (event) => {
+   state.dynamicGrid.addEventListener("dragstart", (event) => {
      let clickedElemClass = event.target.className;
      if (clickedElemClass === "grid-image") {
        state.draggedImgSrc = event.target.src;
@@ -170,7 +177,7 @@
  // readSortCookie would:
  // - read 'sort' cookie 
  // - set the selected option.
- // - make the select-div visible (to avoid jitter).
+ // - make the select-option-div visible (to avoid jitter).
  // - sort the grid items array.
  // =============================================================================
  readSortCookie = () => {
@@ -190,7 +197,7 @@
    // The options carry the same id as the cookie.
    let selectedOption = document.getElementById(sortCookie);
    selectedOption.setAttribute("selected", "selected");
-   state.selectDiv.style.visibility = "visible";
+   state.selectOptionDiv.style.visibility = "visible";
 
    sortGridItems(sortAttr, sortDirection);
  }
@@ -224,7 +231,7 @@
    // I save the index of the selected img for the next/previous operations
    // so I can simply go to the next/previous element inthe gridItems array. 
    let selectedImgId = arrSrc[2];
-   state.modelImgIndex = state.gridItems.findIndex((element) => {
+   state.modalImgIndex = state.gridItems.findIndex((element) => {
      return element.id === selectedImgId;
    });
 
@@ -258,7 +265,7 @@
  // =============================================================================
  renderGrid = () => {
    // get the grid element and blank it out. 
-   state.theGrid.innerHTML = '';
+   state.dynamicGrid.innerHTML = '';
 
    // loop through the state.gridItems array and construct the grid.
    state.gridItems.forEach((elem, i) => {
@@ -271,7 +278,7 @@
 
      let heartImg = isLiked ? "images/heartFull.jpg" : "images/heartOutline.png";
 
-     state.theGrid.innerHTML +=
+     state.dynamicGrid.innerHTML +=
        `<figure class="grid-item">
          <img class="grid-image" src="${src}">
          <figcaption class="figcaption">${caption} &nbsp;|&nbsp;
@@ -282,27 +289,28 @@
          <img class="heart" id="${id}" src=${heartImg} style="width:15px"/>
        </figure>`;
    });
+ }
 
-
-   if (state.spinnerDiv != null) {
-     // Since it takes some time to load the images there is some "jitter".
-     // To avoid it:
-     //   - Initially, the grid section is hidden. 
-     //   - The spinner-div is a visible spinner. 
-     //   - Each image, upon loading, would increment state.counter
-     //   - Once the counter === the array size the grid section becomes visible and the spinner-div is removed. 
-     let allImgs = state.theGrid.querySelectorAll(".grid-image");
-     allImgs.forEach((elem) => {
-       elem.addEventListener("load", (event) => {
-         state.counter++;
-         if (state.counter === state.gridItems.length) {
-           state.theGrid.style.visibility = "visible";
-           state.spinnerDiv.parentNode.removeChild(state.spinnerDiv);
-           state.spinnerDiv = null;
-         }
-       });
+ // =============================================================================
+ // Since it takes some time to load the images there is some "jitter".
+ // To avoid it:
+ //   - initially, during image loading, the grid section is hidden. 
+ //   - during this tim, the spinner-div is visibly spinning. 
+ //   - each image, upon loading, increments state.counter.
+ //   - once the counter === the array size the grid section becomes visible and the spinner-div is removed. 
+ //   - display = "none" would remove the element from the DOM altogther rather then hiding it. 
+ // =============================================================================
+ gridImgsOnloadAssignment = () => {
+   let allImgs = state.dynamicGrid.querySelectorAll(".grid-image");
+   allImgs.forEach((elem) => {
+     elem.addEventListener("load", (event) => {
+       state.counter++;
+       if (state.counter === state.gridItems.length) {
+         state.dynamicGrid.style.visibility = "visible";         
+         state.spinnerDiv.style.display = "none";
+       }
      });
-   }
+   });
  }
 
  // =============================================================================
@@ -385,3 +393,6 @@
 
  // Now we are ready to render the grid.
  renderGrid();
+
+ // Assign onload event to all images. 
+ gridImgsOnloadAssignment();

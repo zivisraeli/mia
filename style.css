@@ -6,12 +6,19 @@
   --title-font-size: calc(15px + 1.5vw);
   --slow-transition: all 0.5s ease-in;
   --fast-transition: all 0.2s ease-in;
+  --footer-height: 30px;
 }
 
-/* by default, the browser sets some marging. I eliminate it. */
+/* =============================================================================
+   - position is relative so I can place the footer at the bottom, using absolute. 
+   - it should be min-height of 100vh to accomodate a short page.
+   - by default, the browser sets some margin. I eliminate it. 
+============================================================================= */
 body {
-  background-color: #ebebeb;
+  position: relative;
+  min-height:100vh;
   margin: 0;
+  background-color: #ebebeb;
 }
 
 /* =============================================================================
@@ -113,6 +120,10 @@ main {
   text-align: center;
 }
 
+.middle-section {
+  padding-bottom: calc(var(--footer-height) * 2);
+}
+
 /* font size depends on the viewport width */
 main h1 {
   font-family: Oswald;
@@ -162,7 +173,7 @@ About Section
 The Grid
 ============================================================================= */
 #spinner-div {
-  height: 100vh;    
+  height: 100vh;
   top: 100px;
 }
 
@@ -198,12 +209,12 @@ The Grid
   display: inline-block;
 }
 
-#select-div {
+#select-option-div {
   display: inline-block;
   cursor: pointer;
 }
 
-#select-div select {
+#select-option-div select {
   padding: 3px;
   width: 150px;
   border-radius: .2em;
@@ -213,12 +224,12 @@ The Grid
 }
 
 /* I chose box-shadow rather then border manipulation to avoid "jitter" */
-#select-div select:hover {
+#select-option-div select:hover {
   box-shadow: 0 0 2px 2px var(--gray-color);
   cursor: pointer;
 }
 
-#select-div select option {
+#select-option-div select option {
   background: #ffffcc;
 }
 
@@ -245,7 +256,7 @@ hr {
   transition: var(--fast-transition);
 }
 
-.the-grid {
+.dynamic-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
   grid-gap: 2rem;
@@ -311,7 +322,7 @@ The Modal
   position: absolute;
   top: 50%;
   height: 30px;
-    width: 100px;
+  width: 100px;
   background-color: var(--orange-color);
   border: 1px solid black;
   font-size: 15px;
@@ -368,13 +379,17 @@ The Modal
   cursor: pointer;
 }
 
-/* If line-height is the same figure as height, element would be centered vertically */
+/* The footer is placed at the bottom relative to its containing element (not the vp). 
+  If line-height is the same figure as height, element would be centered vertically.
+   */
 footer {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
   text-align: center;
-  height: 30px;
-  line-height: 30px;
+  height: var(--footer-height);
+  line-height: var(--footer-height);
   border-top: 1px solid var(--gray-color);
-  margin-top: 50px;
   background-color: #d3d3d3;
 }
 
@@ -607,6 +622,7 @@ form button {
     height: 0;
     opacity: 1;
   }
+
   100% {
     top: -1px;
     left: -1px;
