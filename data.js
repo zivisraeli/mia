@@ -16,8 +16,8 @@ class GridItem extends Item {
 }
 
 let gridItems = [
-  new GridItem("id00", "images/mia-small-id00.jpg", "zMia in the park", "09/18/2019", 15, false),
-  new GridItem("id01", "images/mia-small-id01.jpg", "dMia in the park", "09/18/2019", 25, false),
+  new GridItem("id00", "images/mia-small-id00.jpg", "zMia in the park at all the time", "09/18/2019", 35, false),
+  new GridItem("id01", "images/mia-small-id01.jpg", "dMia", "09/18/2019", 33, false),
   new GridItem("id02", "images/mia-small-id02.jpg", "cMia in the park", "09/18/2019", 5, false),
   new GridItem("id03", "images/mia-small-id03.jpg", "wMia in the park", "09/18/2019", 17, false),
   new GridItem("id04", "images/mia-small-id04.jpg", "aMia in the park", "09/18/2019", 2, false),

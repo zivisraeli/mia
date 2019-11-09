@@ -10,7 +10,11 @@
    state.modalCotainerDiv = document.getElementById("modal-container-div");
    state.modalContentDiv = document.getElementById("modal-content-div");
    state.modalImg = state.modalCotainerDiv.querySelector("img");
-   state.closeModalBtn = document.getElementsByClassName("close-modal-btn")[0];
+   state.modalImgCaption = state.modalCotainerDiv.querySelector("#modal-img-caption");
+   state.modalImgLikeCount = state.modalCotainerDiv.querySelector("#modal-img-like-count");
+   state.modalImgCloseBtn = document.getElementsByClassName("modal-img-close-btn")[0];
+   state.nextBtn = document.getElementById("next-btn");
+   state.previousBtn = document.getElementById("prev-btn");
 
    // used by the next/previous img btn. 
    state.modalImgIndex = 0;
@@ -22,12 +26,20 @@
    state.headerImg = document.querySelector('#header-img');
    state.draggedIntoDiv = document.querySelector('header #dragged-into-div');
    state.draggedImgSrc = '';
-   state.nextBtn = document.getElementById("next-btn");
-   state.previousBtn = document.getElementById("prev-btn");
+
    state.spinnerDiv = document.getElementById("spinner-div");
    state.selectOptionDiv = document.getElementById("select-option-div");
    state.counter = 0;
  };
+
+ navigationBtnClicked = (theElemIndex) => {
+   let theElem = state.gridItems[theElemIndex];
+   let theSrc = theElem.src;
+   renderModalImg(theSrc);
+
+   // So it won't bubble into window.onclick().
+   event.stopPropagation();
+ }
 
  // =============================================================================
  // Add all events.
@@ -37,26 +49,16 @@
    // Modal's next/previous buttons.
    state.nextBtn.onclick = (event) => {
      let theNextIndex = (state.modalImgIndex + 1) === state.gridItems.length ? 0 : state.modalImgIndex + 1;
-     let theElem = state.gridItems[theNextIndex];
-     let theSrc = theElem.src;
-     renderModalImg(theSrc);
-
-     // So it won't bubble into window.onclick().
-     event.stopPropagation();
+     navigationBtnClicked(theNextIndex);
    }
 
    state.previousBtn.onclick = (event) => {
      let thePreviousIndex = state.modalImgIndex === 0 ? state.gridItems.length - 1 : state.modalImgIndex - 1;
-     let theElem = state.gridItems[thePreviousIndex];
-     let theSrc = theElem.src;
-     renderModalImg(theSrc);
-
-     // So it won't bubble into window.onclick().
-     event.stopPropagation();
+     navigationBtnClicked(thePreviousIndex);
    }
 
    // Modal's close button.
-   state.closeModalBtn.onclick = () => {
+   state.modalImgCloseBtn.onclick = () => {
      state.modalCotainerDiv.style.display = "none";
      state.gridSection.classList.remove("blurred");
      state.gridSection.classList.add("un-blurred");
@@ -212,7 +214,7 @@
      if (sortByAttr === "captions") {
        retVal = item1.caption.toUpperCase() > item2.caption.toUpperCase() ? 1 : -1;
      } else {
-       retVal = item1.likeCount > item2.likeCount ? 1 : -1;
+       retVal = item1.likeCount > item2.likeCount ? 1 : -1
      }
      return retVal * direction;
    });
@@ -234,6 +236,11 @@
    state.modalImgIndex = state.gridItems.findIndex((element) => {
      return element.id === selectedImgId;
    });
+
+   let theCaption = state.gridItems[state.modalImgIndex].caption;
+   let theLikeCount = state.gridItems[state.modalImgIndex].likeCount;
+   state.modalImgCaption.innerHTML = theCaption;
+   state.modalImgLikeCount.innerHTML = `${theLikeCount}<img src="images/heartLikes.jpg" style="width:15px"/>'s`;
 
    // Upon loading the img I need to get its "natural" size.
    // Since I place the modal-content-div 110px from the top it's not included in the vp Height. 
@@ -282,7 +289,7 @@
        `<figure class="grid-item">
          <img class="grid-image" src="${src}">
          <figcaption class="figcaption">${caption} &nbsp;|&nbsp;
-                     <span id="like-count-span">${likeCount}</span>&nbsp;
+                     <span id="like-count-span">${likeCount}</span>
                      <img src="images/heartLikes.jpg" style="width:15px"/>\'s&nbsp;|&nbsp;
                      ${date}&nbsp;
          </figcaption>
@@ -306,7 +313,7 @@
      elem.addEventListener("load", (event) => {
        state.counter++;
        if (state.counter === state.gridItems.length) {
-         state.dynamicGrid.style.visibility = "visible";         
+         state.dynamicGrid.style.visibility = "visible";
          state.spinnerDiv.style.display = "none";
        }
      });

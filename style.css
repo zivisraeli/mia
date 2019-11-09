@@ -16,7 +16,7 @@
 ============================================================================= */
 body {
   position: relative;
-  min-height:100vh;
+  min-height: 100vh;
   margin: 0;
   background-color: #ebebeb;
 }
@@ -354,16 +354,31 @@ The Modal
 
 #modal-img-div {
   padding: 25px 25px 25px 25px;
+  font-family: calibri;
+  font-size: 13px;
 }
 
 /* Modal image should be the width of the containing div */
-#modal-img-div img {
+#modal-img-div > img {
   width: 100%;
   border: 1px solid black;
 }
 
-/* The close-modal-btn Button */
-.close-modal-btn {
+/* the image's caption is placed a little over the bottom and centered. */
+#modal-img-div #modal-img-caption {
+  position: absolute;
+  bottom: 5px;
+  left: 25px;
+}
+
+#modal-img-div #modal-img-like-count {
+  position: absolute;
+  bottom: 5px;
+  right: 25px;
+}
+
+/* The modal-img-close-btn Button */
+.modal-img-close-btn {
   position: relative;
   right: 5px;
   color: var(--orange-color);
@@ -373,8 +388,8 @@ The Modal
 }
 
 /* Change the close btn color and cursor */
-.close-modal-btn:hover,
-.close-modal-btn:focus {
+.modal-img-close-btn:hover,
+.modal-img-close-btn:focus {
   color: black;
   cursor: pointer;
 }
@@ -575,7 +590,23 @@ form button {
   }
 
   #modal-content-div {
-    width: 90vw;
+    width: 95vw;
+  }
+
+  #modal-container-div .button {
+    width: 30px;
+  }
+
+  #modal-container-div .button-text {
+    display: none;
+  }
+
+  #modal-container-div #prev-btn {
+    left: 0;
+  }
+
+  #modal-container-div #next-btn {
+    right: 0;
   }
 
   /* the two footer spans are split veritically */
