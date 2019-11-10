@@ -4,6 +4,7 @@
 <head>
   <title>Mia's Selfies</title>
   <link rel="stylesheet" type="text/css" href="style.css">
+  <link rel="stylesheet" type="text/css" href="spinner.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.7.2/animate.min.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Oswald">
@@ -63,20 +64,20 @@
          - modal-img-div carries the image properties.
        The img's src & size is determined in the script. 
   -->
-  <div id="modal-container-div">>
+  <div id="modal-container-div">
     <div id="modal-content-div">
       <span class="modal-img-close-btn">&times;</span>
       <div id="modal-img-div">
         <img src="" />
-        <span id="modal-img-caption"></span>
-        <span id="modal-img-like-count"></span>
+        <span id="modal-img-text" class="modal-img-caption"></span>
+        <span id="modal-img-like-count" class="modal-img-caption"></span>
       </div>
     </div>
-    <button id="prev-btn" class="button">
+    <button id="prev-btn" class="nav-button">
       <i class="fa fa-arrow-circle-left" /></i>
       <span class="button-text">&nbsp;&nbsp;Previous</span>
     </button>
-    <button id="next-btn" class="button">
+    <button id="next-btn" class="nav-button">
       <span class="button-text">Next&nbsp;&nbsp;</span>
       <i class="fa fa-arrow-circle-right" /></i>
     </button>

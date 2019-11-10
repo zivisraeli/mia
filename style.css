@@ -1,6 +1,7 @@
 :root {
   --orange-color: #ffa500;
   --gray-color: #808080;
+  --header-height: 95px;
   --less-900-margins: 50px;
   --less-700-margins: 10px;
   --title-font-size: calc(15px + 1.5vw);
@@ -22,7 +23,7 @@ body {
 }
 
 /* =============================================================================
-  - using flex so elements follow each other horizontally. later on - vertically.
+  - using flex so elements follow each other horizontally. 
   - sticky position is preferable over fixed since it keeps the element part of the flow. 
   - width of the entire screen
   - z-index will make it on top of any other element (the position property removes it from the normal flow.)
@@ -35,7 +36,7 @@ header {
   border-top: 1px solid var(--gray-color);
   border-bottom: 1px solid var(--gray-color);
   width: 100%;
-  height: 95px;
+  height: var(--header-height);
   z-index: 1;
 }
 
@@ -262,11 +263,22 @@ hr {
   grid-gap: 2rem;
 }
 
+/* it's relative so the heart can be placed absolutely */
 .grid-item {
+  position: relative;
   background-color: #f5f5f5;
   border: 1px solid black;
   font-size: 13px;
   text-align: center;
+  margin: 0px;
+}
+
+/* would transition all properties that their valued changed (trans, color, shadow) */
+.grid-item:hover {
+  transition: var(--slow-transition);
+  transform: scale(1.1);
+  background-color: #ffa500;
+  box-shadow: 10px 10px 5px rgba(0, 0, 0, 0.33);
 }
 
 /* the img width would fit the parent (div) element 100% */
@@ -275,27 +287,26 @@ hr {
   border-bottom: 1px solid black;
 }
 
-
-/* would transition all properties that their valued changed (trans, color, shadow) */
-.grid-item:hover {
-  transition: var(--slow-transition);
-  trans#old-form: scale(1.1);
-  background-color: #ffa500;
-  box-shadow: 10px 10px 5px rgba(0, 0, 0, 0.33);
-}
-
-figure {
-  margin: 0px;
-  position: relative;
-}
-
-figure .heart {
+/* initially the heart size is 15px. Onclick, it's animated to 20px and back twice */
+.grid-item .heart {
   position: absolute;
+  width:15px;
   top: 5px;
   right: 5px;
 }
 
-figcaption {
+.grid-item .animatedHeartBeat {
+  animation: heartBeat;
+  animation-duration: 2s;
+  animation-iteration-count: 1;
+}
+
+@keyframes heartBeat {
+  from {width:15px;}
+  to {width:20px;}
+}
+
+.grid-item figcaption {
   margin-bottom: 5px;
 }
 
@@ -303,22 +314,21 @@ figcaption {
 /* =============================================================================
 The Modal
 ============================================================================= */
-/* 
-   - Initally it's hidden with display:none.
-   - Blurring the rest of the viewport with background-color.
+/* - Initally it's hidden (display:none).
+   - blurring the rest of the viewport with background-color.
    - z-index would place the modal on top when active. */
 #modal-container-div {
-  position: absolute;
-  display: none;
   position: fixed;
-  z-index: 1;
   left: 0;
   top: 0;
+  display: none;
+  z-index: 1;
   width: 100%;
   height: 100%;
 }
 
-#modal-container-div .button {
+/* the button postion is in relation to its container div - modal-cotainer-div */
+#modal-container-div .nav-button {
   position: absolute;
   top: 50%;
   height: 30px;
@@ -344,10 +354,12 @@ The Modal
   right: 10px;
 }
 
-/* Modal Content width is determined in the Javascript based on the img propotions. */
+/* - it's relative so the footer/caption can be placed absolutely. 
+   - the top part is right underneath the header (its height + 2px for border); 
+   - the width is determined in the Javascript based on the img propotions. */
 #modal-content-div {
   position: relative;
-  top: 97px;
+  top: calc(var(--header-height) + 2px);
   margin: auto;
   background-color: #fefefe;
 }
@@ -359,21 +371,22 @@ The Modal
 }
 
 /* Modal image should be the width of the containing div */
-#modal-img-div > img {
+#modal-img-div>img {
   width: 100%;
   border: 1px solid black;
 }
 
 /* the image's caption is placed a little over the bottom and centered. */
-#modal-img-div #modal-img-caption {
+#modal-img-div .modal-img-caption {
   position: absolute;
-  bottom: 5px;
+  bottom: 7px;
+}
+
+#modal-img-div #modal-img-text {
   left: 25px;
 }
 
 #modal-img-div #modal-img-like-count {
-  position: absolute;
-  bottom: 5px;
   right: 25px;
 }
 
@@ -593,7 +606,7 @@ form button {
     width: 95vw;
   }
 
-  #modal-container-div .button {
+  #modal-container-div .nav-button {
     width: 30px;
   }
 
@@ -621,44 +634,5 @@ form button {
 
   #footer-copyright {
     display: block;
-  }
-}
-
-/* =============================================================================
-   Spinner Animation
-============================================================================= */
-.lds-ripple {
-  display: inline-block;
-  position: relative;
-  width: 64px;
-}
-
-.lds-ripple div {
-  position: absolute;
-  border: 6px solid orange;
-  opacity: 1;
-  border-radius: 50%;
-  animation: lds-ripple 1s cubic-bezier(0, 0.2, 0.8, 1) infinite;
-}
-
-.lds-ripple div:nth-child(2) {
-  animation-delay: -0.5s;
-}
-
-@keyframes lds-ripple {
-  0% {
-    top: 50px;
-    left: 50px;
-    width: 0;
-    height: 0;
-    opacity: 1;
-  }
-
-  100% {
-    top: -1px;
-    left: -1px;
-    width: 100px;
-    height: 100px;
-    opacity: 0;
   }
 }
