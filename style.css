@@ -244,7 +244,8 @@ The Grid
 }
 
 #grid-section ul li::before {
-  content: url('images/bullet-icon-mini.jpg');
+  content: url('images/bullet-icon-new.png');
+  margin-right: 4px;
   display: inline-block;
 }
 
@@ -351,6 +352,10 @@ hr {
 
 .grid-item figcaption {
   margin-bottom: 5px;
+}
+
+.heart-likes-icon {
+  width: 11px;
 }
 
 

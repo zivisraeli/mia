@@ -248,7 +248,7 @@ renderModalImg = (imgSrc) => {
   let theCaption = state.gridItems[state.modalImgIndex].caption;
   let theLikeCount = state.gridItems[state.modalImgIndex].likeCount;
   state.modalImgText.innerHTML = theCaption;
-  state.modalImgLikeCount.innerHTML = `${theLikeCount}<img src="images/heartLikes.jpg" style="width:15px"/>'s`;
+  state.modalImgLikeCount.innerHTML = `${theLikeCount}&nbsp<img src="images/heart-likes.png" class="heart-likes-icon"/>'s`;
 
   // Upon loading the img I need to get its "natural" size.
   // Since I place the modal-content-div 110px from the top it's not included in the vp Height. 
@@ -291,14 +291,14 @@ renderGrid = () => {
     let date = elem.date;
     let isLiked = elem.isLiked;
 
-    let heartImg = isLiked ? "images/heartFull.jpg" : "images/heartOutline.png";
+    let heartImg = isLiked ? "images/heartFull.jpg" : "images/heart-outline.png";
 
     state.dynamicGrid.innerHTML +=
       `<figure class="grid-item">
          <img class="grid-image" src="${src}">
          <figcaption class="figcaption">${caption} &nbsp;|&nbsp;
                      <span id="like-count-span">${likeCount}</span>
-                     <img src="images/heartLikes.jpg" style="width:15px"/>\'s&nbsp;|&nbsp;
+                     <img src="images/heart-likes.png" class="heart-likes-icon"/>\'s&nbsp;|&nbsp;
                      ${date}&nbsp;
          </figcaption>
          <img class="heart" id="${id}" src=${heartImg} />
@@ -346,12 +346,12 @@ toggleHeart = (event) => {
   if (gridItem.isLiked) {
     gridItem.isLiked = false;
     gridItem.likeCount--;
-    theTarget.setAttribute("src", "images/heartOutline.png");
+    theTarget.setAttribute("src", "images/heart-outline.png");
     theTarget.setAttribute("class", "heart");
   } else {
     gridItem.isLiked = true;
     gridItem.likeCount++;
-    theTarget.setAttribute("src", "images/heartFull.jpg");
+    theTarget.setAttribute("src", "images/heart-full.png");
     theTarget.setAttribute("class", "heart animatedHeartBeat");
   }
 
