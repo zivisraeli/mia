@@ -261,8 +261,6 @@ renderModalImg = (imgSrc) => {
     let imgPropotion = imgW / imgH;
     let vpPropotion = vpW / vpH;
     let newW = imgPropotion * vpH;
-    let maxImgW = vpW * 0.75;
-    newW = newW > maxImgW ? maxImgW : newW;
     state.modalContentDiv.style.width = newW + "px";
 
     // Finally, display it. 
