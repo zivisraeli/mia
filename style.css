@@ -118,6 +118,7 @@ header nav a:hover {
 }
 
 main {
+  position: relative;
   text-align: center;
 }
 
@@ -134,14 +135,51 @@ main h1 {
   margin-bottom: 5px;
 }
 
-#about-main>img {
-  border: 1px solid black;
-}
-
 /* =============================================================================
 About Section
-  - height is equal to 65% of the overall viewport height 
 ============================================================================= */
+/* in order to center an absolute positioned element I'm using the position figures below */
+#about-main #img-frame {
+  position: absolute;
+  left: 0;
+  right: 0;
+  margin-left: auto;
+  margin-right: auto;
+  width: 300px;
+}
+
+#about-main #img {
+  margin-top: 45px;
+  margin-bottom: 40px;
+  width: 210px;
+  animation-name: fade-in;
+  animation-duration: 15s;
+}
+
+#about-main #animated-title {
+  animation: slide-in 5s ease-in-out;
+}
+
+@keyframes fade-in {
+  0% {
+    opacity: 0;
+  }
+
+  100% {
+    opacity: 1;
+  }
+}
+
+@keyframes slide-in {
+  0% {
+    transform: translateX(50%);
+  }
+
+  100% {
+    transform: translateX(0%);
+  }
+}
+
 #about-section div {
   display: grid;
   grid-gap: 10px;
@@ -290,7 +328,7 @@ hr {
 /* initially the heart size is 15px. Onclick, it's animated to 20px and back twice */
 .grid-item .heart {
   position: absolute;
-  width:15px;
+  width: 15px;
   top: 5px;
   right: 5px;
 }
@@ -302,8 +340,13 @@ hr {
 }
 
 @keyframes heartBeat {
-  from {width:15px;}
-  to {width:20px;}
+  from {
+    width: 15px;
+  }
+
+  to {
+    width: 20px;
+  }
 }
 
 .grid-item figcaption {
