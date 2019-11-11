@@ -312,14 +312,6 @@ hr {
   margin: 0px;
 }
 
-/* would transition all properties that their valued changed (trans, color, shadow) */
-.grid-item:hover {
-  transition: var(--slow-transition);
-  transform: scale(1.1);
-  background-color: #ffa500;
-  box-shadow: 10px 10px 5px rgba(0, 0, 0, 0.33);
-}
-
 /* the img width would fit the parent (div) element 100% */
 .grid-item .grid-image {
   width: 100%;
@@ -568,6 +560,16 @@ form button {
 /* =============================================================================
    Media Queries
 ============================================================================= */
+@media (hover: hover) {
+  /* would transition all properties that their valued changed (trans, color, shadow) */
+  .grid-item:hover {
+    transition: var(--slow-transition);
+    transform: scale(1.05);
+    background-color: #ffa500;
+    box-shadow: 10px 10px 5px rgba(0, 0, 0, 0.33);
+  }
+}
+
 /* the nav elements should be placed vertically and in the center */
 @media screen and (max-width: 900px) {
   header {

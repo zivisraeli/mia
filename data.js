@@ -48,5 +48,6 @@ let gridItems = [
   new GridItem("id29", "images/mia-small-id29.jpg", "aMia in the park", "09/18/2019", 5, false),
   new GridItem("id30", "images/mia-small-id30.jpg", "mMia in the park", "09/18/2019", 15, false),
   new GridItem("id31", "images/mia-small-id31.jpg", "qMia in the park", "09/18/2019", 21, false),
-  new GridItem("id32", "images/mia-small-id32.jpg", "cMia in the park", "09/18/2019", 15, false)  
+  new GridItem("id32", "images/mia-small-id32.jpg", "cMia in the park", "09/18/2019", 15, false),
+  new GridItem("id33", "images/mia-small-id33.jpg", "zzzMia in the park", "09/18/2019", 45, false)   
 ];
