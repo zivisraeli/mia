@@ -237,7 +237,6 @@ renderModalImgEvent = (imgSrc) => {
     let vpW = document.documentElement.clientWidth;
     let vpH = document.documentElement.clientHeight - 110;
     let imgPropotion = imgW / imgH;
-    let vpPropotion = vpW / vpH;
     let newW = imgPropotion * vpH;
     state.modalContentDiv.style.width = newW + "px";
 
