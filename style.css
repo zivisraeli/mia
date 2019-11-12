@@ -529,6 +529,18 @@ form label {
   text-align: right;
 }
 
+form #phone-comment {
+  margin-top: 0px;
+  text-align: left;
+}
+
+form #phone-comment span {
+  margin-left: 92px;
+  font-style: italic;
+  font-size: 13px;
+  color: #aaaaaa;
+}
+
 /* ouline: none; removes the blue outline */
 input[type=text],
 input[type=email],
@@ -623,6 +635,10 @@ form button {
   form label {
     display: block;
     text-align: left;
+  }
+
+  form #phone-comment span {
+    margin-left: 0px;
   }
 
   form .button {

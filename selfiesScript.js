@@ -88,7 +88,7 @@ addEvents = () => {
     }
   }
 
-  // SwipeEvents
+  // touchEvents
   window.addEventListener('touchstart', swipeTouchStartEvent, false);
   window.addEventListener('touchend', swipeTouchEndEvent, false);
 
@@ -138,7 +138,7 @@ addEvents = () => {
   // - set the headerImgId cookie.
   // - remove the cue styling.
   state.draggedIntoDiv.addEventListener("drop", (event) => {
-    setHeaderNewImgEvent(state.draggedImg);
+    setHeaderImgEvent(state.draggedImg);
     state.headerImg.classList.remove("img-hovered");
   });
 
@@ -248,6 +248,8 @@ renderModalImgEvent = (imgSrc) => {
 
 // =============================================================================
 // invoked by the touchstart and touchend events.
+// I'm using the event.chagnedTouches rather then the event.touches since during
+// the touchEnd event only the changedTouches propery is populated. 
 // =============================================================================
 swipeTouchStartEvent = (event) => {
   let clickedElemClass = event.target.className;
@@ -278,7 +280,7 @@ swipeTouchEndEvent = (event) => {
       if (state.xUp > state.xDown) {
         toggleHeartEvent(theTouch.target.parentElement.id);
       } else {
-        setHeaderNewImgEvent(theTouch.target);
+        setHeaderImgEvent(theTouch.target);
       }
     }
   }
@@ -288,8 +290,8 @@ swipeTouchEndEvent = (event) => {
 // The function is invoked either by drop (desktop) or swipeEnd (mobile) event. 
 // The id is derived from the img's src in order to set the cookie. 
 // =============================================================================
-setHeaderNewImgEvent = (newImgElem) => {
-  let newImgSrc = newImgElem.getAttribute("src");
+setHeaderImgEvent = (imgElem) => {
+  let newImgSrc = imgElem.getAttribute("src");
   state.headerImg.setAttribute("src", newImgSrc);
   let imgId = newImgSrc.match('mia-(.*).jpg')[1];
   setCookie("headerImgId", imgId);
