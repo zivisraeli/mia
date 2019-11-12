@@ -251,6 +251,10 @@ The Grid
   display: inline-block;
 }
 
+#grid-section .mobileLi {
+  display: none;
+}
+
 #select-option-div {
   display: inline-block;
   cursor: pointer;
@@ -697,5 +701,14 @@ form button {
     transform: none;
     background-color: var(--gray-color-grid);
     box-shadow: none;
+  }
+
+  /* some of the grid's li elements should appear only on desktop or mobile */
+  #grid-section .desktopLi {
+    display: none;
+  }
+
+  #grid-section .mobileLi {
+    display: block;
   }
 }

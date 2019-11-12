@@ -29,8 +29,14 @@ assignStateElements = () => {
   // the target of drag operation.
   state.headerImg = document.querySelector('#header-img');
   state.draggedIntoDiv = document.querySelector('header #dragged-into-div');
-  state.draggedImgSrc = '';
-  
+  state.draggedImg = '';
+
+  // to detect finger swipe on mobile device
+  state.xDown = 0;
+  state.yDown = 0;
+  state.xUp = 0;
+  state.yUp = 0;
+
   // misc.
   state.spinnerDiv = document.getElementById("spinner-div");
   state.selectOptionDiv = document.getElementById("select-option-div");
@@ -45,12 +51,12 @@ addEvents = () => {
   // Modal's navEvent (next/previous buttons).
   state.nextBtn.onclick = (event) => {
     let theNextIndex = (state.modalImgIndex + 1) === state.gridItems.length ? 0 : state.modalImgIndex + 1;
-    navigationBtnClicked(theNextIndex);
+    navigationBtnClickedEvent(theNextIndex);
   }
 
   state.previousBtn.onclick = (event) => {
     let thePreviousIndex = state.modalImgIndex === 0 ? state.gridItems.length - 1 : state.modalImgIndex - 1;
-    navigationBtnClicked(thePreviousIndex);
+    navigationBtnClickedEvent(thePreviousIndex);
   }
 
   // Modal's closeEvent.
@@ -61,16 +67,16 @@ addEvents = () => {
   }
 
   // Onclick events that are related to each grid's image:
-  //   - likeEvent: like/unlike an image.
+  //   - likeEvent: like/unlike an image. I get the id from the parent element (figure tag)
   //   - modalEvent: render popup modal image and blur the background. 
   //   - if the modal is ON, then unblur the grid background upon closing a modal. 
   window.onclick = (event) => {
     let clickedElemClass = event.target.className;
     if (clickedElemClass.startsWith("heart")) {
-      toggleHeart(event);
+      toggleHeartEvent(event.target.parentElement.id);
     } else if (clickedElemClass.startsWith("grid-image")) {
       let gridImgSrc = event.target.src;
-      renderModalImg(gridImgSrc);
+      renderModalImgEvent(gridImgSrc);
       state.gridSection.classList.remove("un-blurred");
       state.gridSection.classList.add("blurred");
     } else {
@@ -82,6 +88,10 @@ addEvents = () => {
     }
   }
 
+  // SwipeEvents
+  window.addEventListener('touchstart', swipeTouchStartEvent, false);
+  window.addEventListener('touchend', swipeTouchEndEvent, false);
+
   // selectEvents. Upon selecting an option:
   // - sort the array.
   // - set the cookie.
@@ -91,16 +101,16 @@ addEvents = () => {
     let selectedOptionId = event.target[selectedIndex].id;
     switch (selectedOptionId) {
       case 'likes+1':
-        sortGridItems('likes', 1);
+        sortGridItemsEvent('likes', 1);
         break;
       case 'likes-1':
-        sortGridItems('likes', -1);
+        sortGridItemsEvent('likes', -1);
         break;
       case 'captions+1':
-        sortGridItems('captions', 1);
+        sortGridItemsEvent('captions', 1);
         break;
       case 'captions-1':
-        sortGridItems('captions', -1);
+        sortGridItemsEvent('captions', -1);
         break;
       default:
         break;
@@ -113,7 +123,7 @@ addEvents = () => {
   state.dynamicGrid.addEventListener("dragstart", (event) => {
     let clickedElemClass = event.target.className;
     if (clickedElemClass === "grid-image") {
-      state.draggedImgSrc = event.target.src;
+      state.draggedImg = event.target;
     }
   });
 
@@ -128,9 +138,7 @@ addEvents = () => {
   // - set the headerImgId cookie.
   // - remove the cue styling.
   state.draggedIntoDiv.addEventListener("drop", (event) => {
-    state.headerImg.setAttribute("src", state.draggedImgSrc);
-    let imgId = state.draggedImgSrc.match('mia-(.*).jpg')[1];
-    setCookie("headerImgId", imgId);
+    setHeaderNewImgEvent(state.draggedImg);
     state.headerImg.classList.remove("img-hovered");
   });
 
@@ -153,13 +161,156 @@ addEvents = () => {
 // =============================================================================
 // invoked by navigation buttons to retrieve and render another image on the modal popup. 
 // =============================================================================
-navigationBtnClicked = (theElemIndex) => {
+navigationBtnClickedEvent = (theElemIndex) => {
   let theElem = state.gridItems[theElemIndex];
   let theSrc = theElem.src;
-  renderModalImg(theSrc);
+  renderModalImgEvent(theSrc);
 
   // So it won't bubble into window.onclick().
   event.stopPropagation();
+}
+
+// =============================================================================
+// Like Toggling 
+// in order to find the specif heart element we query the id+.heart since the 
+// id property is with the figure element (the parent of the heart img).
+// =============================================================================
+toggleHeartEvent = (targetId) => {
+  // Get the target element based on the target id
+  let theTarget = document.querySelector(`#${targetId} .heart`);
+
+  // Based on the target id, find the element in the state.gridItems and:
+  //   - toggle the isLiked value.
+  //   - increment/decrement the likeCount.
+  //   - render the right icon with/without the animation.
+  let gridItem = state.gridItems.find((obj) => {
+    return obj.id === targetId;
+  });
+
+  if (gridItem.isLiked) {
+    gridItem.isLiked = false;
+    gridItem.likeCount--;
+    theTarget.setAttribute("src", "images/heart-outline.png");
+    theTarget.setAttribute("class", "heart");
+  } else {
+    gridItem.isLiked = true;
+    gridItem.likeCount++;
+    theTarget.setAttribute("src", "images/heart-full.png");
+    theTarget.setAttribute("class", "heart animatedHeartBeat");
+  }
+
+  // re-render the like count.
+  // we grab the parent (figure tag) from which we query for the like-count-span.
+  let parentElem = theTarget.parentElement;
+  let countElem = parentElem.querySelector("#like-count-span");
+  countElem.innerHTML = gridItem.likeCount;
+
+  updateLikesCookie(gridItem);
+}
+
+// =============================================================================
+// renderModalImgEvent would render the clicked img inside the modal div.
+// =============================================================================
+renderModalImgEvent = (imgSrc) => {
+  let arrSrc = imgSrc.match('(.*mia-).*-(.*)(\.jpg$)');
+  let modalImgSrc = arrSrc[1] + arrSrc[2] + arrSrc[3];
+  state.modalImg.setAttribute("src", modalImgSrc);
+
+  // I save the index of the selected img for the next/previous operations
+  // so I can simply go to the next/previous element inthe gridItems array. 
+  let selectedImgId = arrSrc[2];
+  state.modalImgIndex = state.gridItems.findIndex((element) => {
+    return element.id === selectedImgId;
+  });
+
+  let theCaption = state.gridItems[state.modalImgIndex].caption;
+  let theLikeCount = state.gridItems[state.modalImgIndex].likeCount;
+  state.modalImgText.innerHTML = theCaption;
+  state.modalImgLikeCount.innerHTML = `${theLikeCount}&nbsp<img src="images/heart-likes.png" class="heart-likes-icon"/>'s`;
+
+  // Upon loading the img I need to get its "natural" size.
+  // Since I place the modal-content-div 110px from the top it's not included in the vp Height. 
+  // Yet, the max width of an image would be 75% of the vp. 
+  state.modalImg.onload = function() {
+    let imgW = state.modalImg.naturalWidth;
+    let imgH = state.modalImg.naturalHeight;
+    let vpW = document.documentElement.clientWidth;
+    let vpH = document.documentElement.clientHeight - 110;
+    let imgPropotion = imgW / imgH;
+    let vpPropotion = vpW / vpH;
+    let newW = imgPropotion * vpH;
+    state.modalContentDiv.style.width = newW + "px";
+
+    // Finally, display it. 
+    state.modalCotainerDiv.style.display = "block";
+  }
+}
+
+// =============================================================================
+// invoked by the touchstart and touchend events.
+// =============================================================================
+swipeTouchStartEvent = (event) => {
+  let clickedElemClass = event.target.className;
+  if (clickedElemClass.startsWith("grid-image")) {
+    let theTouch = event.changedTouches[0];
+    state.xDown = theTouch.clientX;
+    state.yDown = theTouch.clientY;
+  }
+}
+
+// =============================================================================
+// the xDiff condition is to make sure a long swipe was excuted.
+// the yDiff condition is to make sure the swipe was mostly horizontal. 
+// swipe to the right - toggle the heart image.
+// swipe to the left - change the header's image. 
+// =============================================================================
+swipeTouchEndEvent = (event) => {
+  let clickedElemClass = event.target.className;
+  if (clickedElemClass.startsWith("grid-image")) {
+    let theTouch = event.changedTouches[0];
+    state.xUp = theTouch.clientX;
+    state.yUp = theTouch.clientY;
+
+    let xDiff = Math.abs(state.xDown - state.xUp);
+    let yDiff = Math.abs(state.yDown - state.yUp);
+
+    if ((xDiff > 25) && (yDiff < 25)) {
+      if (state.xUp > state.xDown) {
+        toggleHeartEvent(theTouch.target.parentElement.id);
+      } else {
+        setHeaderNewImgEvent(theTouch.target);
+      }
+    }
+  }
+}
+
+// =============================================================================
+// The function is invoked either by drop (desktop) or swipeEnd (mobile) event. 
+// The id is derived from the img's src in order to set the cookie. 
+// =============================================================================
+setHeaderNewImgEvent = (newImgElem) => {
+  let newImgSrc = newImgElem.getAttribute("src");
+  state.headerImg.setAttribute("src", newImgSrc);
+  let imgId = newImgSrc.match('mia-(.*).jpg')[1];
+  setCookie("headerImgId", imgId);
+}
+
+// =============================================================================
+// This function takes 2 parameters, compare them and return true or false.
+// Javascript sort function take a "compare" function as a parameter. 
+// =============================================================================
+sortGridItemsEvent = (sortByAttr, direction) => {
+  let sortedGridItems = state.gridItems.sort((item1, item2) => {
+    let retVal = 0;
+    if (sortByAttr === "captions") {
+      retVal = item1.caption.toUpperCase() > item2.caption.toUpperCase() ? 1 : -1;
+    } else {
+      retVal = item1.likeCount > item2.likeCount ? 1 : -1
+    }
+    return retVal * direction;
+  });
+
+  state.gridItems = sortedGridItems;
 }
 
 // =============================================================================
@@ -209,63 +360,7 @@ readSortCookie = () => {
   selectedOption.setAttribute("selected", "selected");
   state.selectOptionDiv.style.visibility = "visible";
 
-  sortGridItems(sortAttr, sortDirection);
-}
-
-// =============================================================================
-// This function takes 2 parameters, compare them and return true or false.
-// Javascript sort function take a "compare" function as a parameter. 
-// =============================================================================
-sortGridItems = (sortByAttr, direction) => {
-  let sortedGridItems = state.gridItems.sort((item1, item2) => {
-    let retVal = 0;
-    if (sortByAttr === "captions") {
-      retVal = item1.caption.toUpperCase() > item2.caption.toUpperCase() ? 1 : -1;
-    } else {
-      retVal = item1.likeCount > item2.likeCount ? 1 : -1
-    }
-    return retVal * direction;
-  });
-
-  state.gridItems = sortedGridItems;
-}
-
-// =============================================================================
-// renderModalImg would render the clicked img inside the modal div.
-// =============================================================================
-renderModalImg = (imgSrc) => {
-  let arrSrc = imgSrc.match('(.*mia-).*-(.*)(\.jpg$)');
-  let modalImgSrc = arrSrc[1] + arrSrc[2] + arrSrc[3];
-  state.modalImg.setAttribute("src", modalImgSrc);
-
-  // I save the index of the selected img for the next/previous operations
-  // so I can simply go to the next/previous element inthe gridItems array. 
-  let selectedImgId = arrSrc[2];
-  state.modalImgIndex = state.gridItems.findIndex((element) => {
-    return element.id === selectedImgId;
-  });
-
-  let theCaption = state.gridItems[state.modalImgIndex].caption;
-  let theLikeCount = state.gridItems[state.modalImgIndex].likeCount;
-  state.modalImgText.innerHTML = theCaption;
-  state.modalImgLikeCount.innerHTML = `${theLikeCount}&nbsp<img src="images/heart-likes.png" class="heart-likes-icon"/>'s`;
-
-  // Upon loading the img I need to get its "natural" size.
-  // Since I place the modal-content-div 110px from the top it's not included in the vp Height. 
-  // Yet, the max width of an image would be 75% of the vp. 
-  state.modalImg.onload = function() {
-    let imgW = state.modalImg.naturalWidth;
-    let imgH = state.modalImg.naturalHeight;
-    let vpW = document.documentElement.clientWidth;
-    let vpH = document.documentElement.clientHeight - 110;
-    let imgPropotion = imgW / imgH;
-    let vpPropotion = vpW / vpH;
-    let newW = imgPropotion * vpH;
-    state.modalContentDiv.style.width = newW + "px";
-
-    // Finally, display it. 
-    state.modalCotainerDiv.style.display = "block";
-  }
+  sortGridItemsEvent(sortAttr, sortDirection);
 }
 
 // =============================================================================
@@ -292,14 +387,15 @@ renderGrid = () => {
     let heartImg = isLiked ? "images/heartFull.jpg" : "images/heart-outline.png";
 
     state.dynamicGrid.innerHTML +=
-      `<figure class="grid-item">
+      `<figure id="${id}" class="grid-item">
          <img class="grid-image" src="${src}">
-         <figcaption class="figcaption">${caption} &nbsp;|&nbsp;
-                     <span id="like-count-span">${likeCount}</span>
-                     <img src="images/heart-likes.png" class="heart-likes-icon"/>\'s&nbsp;|&nbsp;
-                     ${date}&nbsp;
+         <figcaption class="figcaption">
+           ${caption} &nbsp;|&nbsp;
+           <span id="like-count-span">${likeCount}</span>
+           <img src="images/heart-likes.png" class="heart-likes-icon"/>\'s&nbsp;|&nbsp;
+           ${date}&nbsp;
          </figcaption>
-         <img class="heart" id="${id}" src=${heartImg} />
+         <img class="heart" src=${heartImg} />
        </figure>`;
   });
 }
@@ -324,42 +420,6 @@ gridImgsOnloadAssignment = () => {
       }
     });
   });
-}
-
-// =============================================================================
-// Like Toggling 
-// =============================================================================
-toggleHeart = (event) => {
-  // Get the target element based on the target id
-  let theTarget = document.getElementById(event.target.id);
-
-  // Based on the target id, find the element in the state.gridItems and:
-  //   - toggle the isLiked value.
-  //   - increment/decrement the likeCount.
-  //   - render the right icon with/without the animation.
-  let gridItem = state.gridItems.find((obj) => {
-    return obj.id === event.target.id;
-  });
-
-  if (gridItem.isLiked) {
-    gridItem.isLiked = false;
-    gridItem.likeCount--;
-    theTarget.setAttribute("src", "images/heart-outline.png");
-    theTarget.setAttribute("class", "heart");
-  } else {
-    gridItem.isLiked = true;
-    gridItem.likeCount++;
-    theTarget.setAttribute("src", "images/heart-full.png");
-    theTarget.setAttribute("class", "heart animatedHeartBeat");
-  }
-
-  // re-render the like count.
-  // we grab the parent (figure tag) from which we query for the like-count-span.
-  let parentElem = theTarget.parentElement;
-  let countElem = parentElem.querySelector("#like-count-span");
-  countElem.innerHTML = gridItem.likeCount;
-
-  updateLikesCookie(gridItem);
 }
 
 // =============================================================================
