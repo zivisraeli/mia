@@ -759,6 +759,9 @@ form button {
 }
 
 @media screen and (max-width: 600px) {
+  header nav a {
+    font-size: calc(15px + 1.0vw);
+  }
 
   /* removing all special hovering styles for small devices */
   .grid-item:hover {
