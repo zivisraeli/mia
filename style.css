@@ -1,21 +1,21 @@
 :root {
-  --orange-color: #ffa500;
-  --gray-color-border: #808080;
-  --gray-color-background: #fafafa;
-  --gray-color-grid: #fefefe;
-  --header-height: 95px;
-  --less-900-margins: 50px;
-  --less-700-margins: 10px;
-  --title-font-size: calc(20px + 1.5vw);
-  --slow-transition: all 0.5s ease-in;
-  --fast-transition: all 0.2s ease-in;
-  --footer-height: 30px;
+--orange-color: #ffa500;
+--gray-color-border: #808080;
+--gray-color-background: #fafafa;
+--gray-color-grid: #fefefe;
+--header-height: 95px;
+--less-900-margins: 50px;
+--less-700-margins: 10px;
+--title-font-size: calc(20px + 1.5vw);
+--slow-transition: all 0.5s ease-in;
+--fast-transition: all 0.2s ease-in;
+--footer-height: 30px;
 }
 
 /* =============================================================================
-   - position is relative so I can place the footer at the bottom, using absolute. 
-   - it should be min-height of 100vh to accomodate a short page.
-   - by default, the browser sets some margin. I eliminate it. 
+- position is relative so I can place the footer at the bottom, using absolute. 
+- it should be min-height of 100vh to accomodate a short page.
+- by default, the browser sets some margin. I eliminate it. 
 ============================================================================= */
 body {
   position: relative;
@@ -25,9 +25,9 @@ body {
 }
 
 /* =============================================================================
-  - sticky position is preferable over fixed since it keeps the element part of the flow. 
-  - width of the entire screen
-  - z-index will make it on top of any other element (the position property removes it from the normal flow.)
+- sticky position is preferable over fixed since it keeps the element part of the flow. 
+- width of the entire screen
+- z-index will make it on top of any other element (the position property removes it from the normal flow.)
 ============================================================================= */
 header {
   position: sticky;
@@ -50,9 +50,10 @@ header #dragged-into-div {
   height: 200px;
 }
 
-/* - The element is placed relative to it's containing container at 0,0.
-   - The border-radius makes the image round. 
-   - The image also has a border, but it's assigned by the javascript. */
+/* 
+- The element is placed relative to it's containing container at 0,0.
+- The border-radius makes the image round. 
+- The image also has a border, but it's assigned by the javascript. */
 header #dragged-into-div #header-img {
   position: absolute;
   left: 0px;
@@ -70,10 +71,10 @@ header #dragged-into-div #header-img.img-hovered {
 }
 
 /* =============================================================================
-  - flex would allow me later on to arrange them vertically.
-  - margin-left:auto;  would push the element all the way to the right. 
-  - "auto" : taking up available space!!!!!!
-  - the 100% height would strech the div element to the height of its container.
+- flex would allow me later on to arrange them vertically.
+- margin-left:auto;  would push the element all the way to the right. 
+- "auto" : taking up available space!!!!!!
+- the 100% height would strech the div element to the height of its container.
 ============================================================================= */
 header nav {
   position: absolute;
@@ -86,10 +87,10 @@ header nav {
 
 /* =============================================================================
 For the top navigation menu anchors:
-  - no underline 
-  - font size depends on the viewport width (1.5vw) but would be at least 15px.
-  - I need to  use padding and not margin to show a gap with the border
-  - vertical line separator through border-right
+- no underline 
+- font size depends on the viewport width (1.5vw) but would be at least 15px.
+- I need to  use padding and not margin to show a gap with the border
+- vertical line separator through border-right
 ============================================================================= */
 header nav a {
   text-decoration: none;
@@ -135,7 +136,7 @@ main h1 {
 }
 
 /* =============================================================================
-  About Section : 3 parts (h1, div, h1) r orginized horizontally and centered.
+about section : 3 parts (h1, div, h1) r orginized horizontally and centered.
 ============================================================================= */
 #about-top-section {
   display: flex;
@@ -175,7 +176,7 @@ main h1 {
 }
 
 /* =============================================================================
-  Animation for the elements. 
+animations for the elements. 
 ============================================================================= */
 @keyframes fade-in {
   0% {
@@ -252,8 +253,31 @@ main h1 {
   list-style-type: square;
 }
 
+/* ============================================================================= 
+- customized ul element
+- ul is a block element and so need to turn it into inline-block in order to center it. 
+============================================================================= */
+.customed-ul {
+  display: inline-block;
+  text-align: left;
+  list-style-type: none;
+  padding-left: 45px;
+  margin-top: 0px;
+}
+
+.customed-ul li {
+  margin-top: 7px;
+}
+
+.customed-ul li::before {
+  margin-left: -12px;
+  content: url('images/bullet-icon-new.png');
+  margin-right: 4px;
+  display: inline-block;
+}
+
 /* =============================================================================
-The Grid
+the grid
 ============================================================================= */
 #spinner-div {
   height: 100vh;
@@ -268,29 +292,6 @@ The Grid
 
 #grid-section>#title {
   font-size: 2vw;
-}
-
-/* ul is a block element and so need to turn it into inline-block in order to center it. */
-#grid-section ul {
-  display: inline-block;
-  text-align: left;
-  list-style-type: none;
-  padding-left: 55px;
-  margin-top: 0px;
-}
-
-#grid-section ul li {
-  margin-top: 7px;
-}
-
-#grid-section ul li:last-child {
-  margin-top: 10px;
-}
-
-#grid-section ul li::before {
-  content: url('images/bullet-icon-new.png');
-  margin-right: 4px;
-  display: inline-block;
 }
 
 #grid-section .mobileLi {
@@ -326,13 +327,13 @@ hr {
 }
 
 /* =============================================================================
-  - grid-template-columns: auto-fit so the number of elems horizontally changes.
-  - fr unit is grid specifc. fraction. The item would grow and shrink basd on the available space.
-  - repeat function would repeat a pattern i.e. repeat(3, 1fr); instead of 1fr 1fr 1fr;
-  - auto-fit for responsiveness. Can be used with repeat() in order to avoid specifiying a fix number of columns. 
-  - minmax function defines the range i.e. from 320px to 1fr
-  - grid-gap would set gap between items 
-  - the grid determines the WIDTH of the img. Since the imgs are square the HEIGHT would equal the WIDTH.
+- grid-template-columns: auto-fit so the number of elems horizontally changes.
+- fr unit is grid specifc. fraction. The item would grow and shrink basd on the available space.
+- repeat function would repeat a pattern i.e. repeat(3, 1fr); instead of 1fr 1fr 1fr;
+- auto-fit for responsiveness. Can be used with repeat() in order to avoid specifiying a fix number of columns. 
+- minmax function defines the range i.e. from 320px to 1fr
+- grid-gap would set gap between items 
+- the grid determines the WIDTH of the img. Since the imgs are square the HEIGHT would equal the WIDTH.
 ============================================================================= */
 .blurred {
   filter: blur(12px);
@@ -407,11 +408,12 @@ hr {
 
 
 /* =============================================================================
-The Modal
+the modal
 ============================================================================= */
-/* - Initally it's hidden (display:none).
-   - blurring the rest of the viewport with background-color.
-   - z-index would place the modal on top when active. */
+/* 
+- initally it's hidden (display:none).
+- blurring the rest of the viewport with background-color.
+- z-index would place the modal on top when active. */
 #modal-container-div {
   position: fixed;
   left: 0;
@@ -450,8 +452,8 @@ The Modal
 }
 
 /* - it's relative so the footer/caption can be placed absolutely. 
-   - the top part is right underneath the header (its height + 2px for border); 
-   - the width is determined in the Javascript based on the img propotions. */
+ - the top part is right underneath the header (its height + 2px for border); 
+ - the width is determined in the Javascript based on the img propotions. */
 #modal-content-div {
   position: relative;
   top: calc(var(--header-height) + 2px);
@@ -531,7 +533,7 @@ footer img {
 }
 
 /* =============================================================================
-   Fan Form
+fan form
 ============================================================================= */
 #form-header {
   margin: auto;
@@ -540,11 +542,7 @@ footer img {
   text-align: left;
 }
 
-#form-header ul {
-  list-style-type: square;
-}
-
-/* Center the form on the page */
+/* center the form on the page */
 form {
   margin: auto;
   width: 400px;
@@ -604,13 +602,13 @@ textarea {
   width: 300px;
 }
 
-/* Additional highlight for focused elements */
+/* additional highlight for focused elements */
 input:focus,
 textarea:focus {
   border: 1px solid #ffad33;
 }
 
-/* Align textarea with the labels */
+/* align textarea with the labels */
 textarea {
   vertical-align: top;
   height: 5em;
@@ -626,7 +624,7 @@ form button {
 }
 
 /* =============================================================================
-   Media Queries
+media queries
 ============================================================================= */
 
 /* the nav elements should be placed vertically and in the center */
