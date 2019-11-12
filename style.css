@@ -25,13 +25,11 @@ body {
 }
 
 /* =============================================================================
-  - using flex so elements follow each other horizontally. 
   - sticky position is preferable over fixed since it keeps the element part of the flow. 
   - width of the entire screen
   - z-index will make it on top of any other element (the position property removes it from the normal flow.)
 ============================================================================= */
 header {
-  display: flex;
   position: sticky;
   top: 0;
   background: linear-gradient(to right, orange, yellow);
@@ -76,14 +74,13 @@ header #dragged-into-div #header-img.img-hovered {
   - margin-left:auto;  would push the element all the way to the right. 
   - "auto" : taking up available space!!!!!!
   - the 100% height would strech the div element to the height of its container.
-  - under 600px flex elements are vertically ordered and centered through margin property.
 ============================================================================= */
 header nav {
+  position: absolute;
+  right: 150px;
   display: flex;
   align-items: center;
   justify-content: center;
-  margin-right: 150px;
-  margin-left: auto;
   height: 100%;
 }
 
@@ -130,7 +127,7 @@ main {
 
 /* font size depends on the viewport width */
 main h1 {
-  font-family: Oswald;
+  font-family: 'Big Shoulders Display';
   font-weight: 100;
   font-size: var(--title-font-size);
   margin-top: 5px;
@@ -138,30 +135,48 @@ main h1 {
 }
 
 /* =============================================================================
-About Section
+  About Section : 3 parts (h1, div, h1) r orginized horizontally and centered.
 ============================================================================= */
-/* in order to center an absolute positioned element I'm using the position figures below */
-#about-main #img-frame {
-  position: absolute;
-  left: 0;
-  right: 0;
-  margin-left: auto;
-  margin-right: auto;
+#about-top-section {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  color: gray;
+  margin-top: 30px;
+  margin-bottom: 30px;
+}
+
+#about-top-section #img-div {
+  position: relative;
+}
+
+#about-top-section #img-frame {
   width: 300px;
 }
 
-#about-main #img {
-  margin-top: 45px;
-  margin-bottom: 40px;
+#about-top-section #img {
+  position: absolute;
+  top: 45px;
+  left: 45px;
   width: 210px;
   animation-name: fade-in;
   animation-duration: 15s;
 }
 
-#about-main #animated-title {
-  animation: slide-in 5s ease-in-out;
+#about-top-section #title-left {
+  width: 200px;
+  animation: slide-in-right 5s ease-in-out;
 }
 
+#about-top-section #title-right {
+  width: 200px;
+  animation: slide-in-left 5s ease-in-out;
+}
+
+/* =============================================================================
+  Animation for the elements. 
+============================================================================= */
 @keyframes fade-in {
   0% {
     opacity: 0;
@@ -172,21 +187,47 @@ About Section
   }
 }
 
-@keyframes slide-in {
+@keyframes slide-in-left {
   0% {
+    opacity: 0;
+    color: orange;
     transform: translateX(50%);
   }
 
+  50% {
+    color: orange;
+    opacity: 0.1;
+  }
+
   100% {
+    opacity: 1;
+    transform: translateX(0%);
+  }
+}
+
+@keyframes slide-in-right {
+  0% {
+    opacity: 0;
+    color: orange;
+    transform: translateX(-50%);
+  }
+
+  50% {
+    color: orange;
+    opacity: 0.1;
+  }
+
+  100% {
+    opacity: 1;
     transform: translateX(0%);
   }
 }
 
 #about-section div {
   display: grid;
-  grid-gap: 10px;
+  grid-gap: 25px;
   grid-template-columns: 1fr 4fr;
-  width: 50vw;
+  width: 65vw;
   margin: auto;
   text-align: left;
 }
@@ -207,6 +248,7 @@ About Section
 /* ul has a too large default margin. */
 #about-section ul {
   margin: 0;
+  padding-left: 30px;
   list-style-type: square;
 }
 
@@ -603,7 +645,7 @@ form button {
   }
 
   header nav {
-    margin-right: var(--less-900-margins);
+    right: var(--less-900-margins);
   }
 
   #about-section span.title {
@@ -661,7 +703,14 @@ form button {
   }
 
   header nav {
-    margin-right: var(--less-700-margins);
+    right: var(--less-700-margins);
+  }
+
+  #about-top-section {
+    display: flex;
+    flex-direction: column;
+    margin-top: 10px;
+    margin-bottom: 10px;
   }
 
   #about-section div {
