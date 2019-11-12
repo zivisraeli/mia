@@ -6,7 +6,7 @@
   --header-height: 95px;
   --less-900-margins: 50px;
   --less-700-margins: 10px;
-  --title-font-size: calc(15px + 1.5vw);
+  --title-font-size: calc(20px + 1.5vw);
   --slow-transition: all 0.5s ease-in;
   --fast-transition: all 0.2s ease-in;
   --footer-height: 30px;
@@ -128,9 +128,9 @@ main {
 /* font size depends on the viewport width */
 main h1 {
   font-family: 'Big Shoulders Display';
-  font-weight: 100;
+  font-weight: 500;
   font-size: var(--title-font-size);
-  margin-top: 5px;
+  margin-top: 15px;
   margin-bottom: 5px;
 }
 
@@ -165,12 +165,12 @@ main h1 {
 }
 
 #about-top-section #title-left {
-  width: 200px;
+  width: 300px;
   animation: slide-in-right 5s ease-in-out;
 }
 
 #about-top-section #title-right {
-  width: 200px;
+  width: 300px;
   animation: slide-in-left 5s ease-in-out;
 }
 
