@@ -385,7 +385,7 @@ renderGrid = () => {
     let date = elem.date;
     let isLiked = elem.isLiked;
 
-    let heartImg = isLiked ? "images/heart-ful.jpg" : "images/heart-outline.png";
+    let heartImg = isLiked ? "images/heart-full.jpg" : "images/heart-outline.png";
 
     state.dynamicGrid.innerHTML +=
       `<figure id="${id}" class="grid-item">
