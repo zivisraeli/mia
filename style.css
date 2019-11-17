@@ -5,7 +5,7 @@
   --gray-color-grid: #fefefe;
   --header-height: 95px;
   --less-900-margins: 50px;
-  --less-700-margins: 10px;
+  --less-700-margins: 25px;
   --title-font-size: calc(20px + 1.5vw);
   --slow-transition: all 0.5s ease-in;
   --fast-transition: all 0.2s ease-in;
@@ -78,7 +78,7 @@ header #dragged-into-div #header-img.img-hovered {
 ============================================================================= */
 header nav {
   position: absolute;
-  right: 150px;
+  right: 100px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -506,6 +506,39 @@ the modal
   cursor: pointer;
 }
 
+/* I'm using the iframe-wrapper to create intrinsic ratios of the video.  
+Intrinsic ratios allow elements to fill the width of their containing block and resize on the fly 
+while maintaining their aspect ratio.  */
+#iframe-wrapper {
+  position: relative;
+  width: 50vw;
+  margin: 25px auto;
+  padding-bottom: 28%;
+  border: 2px solid gray;
+}
+
+/* the iframe takes 100% of the wrapping div */
+#iframe-wrapper iframe {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+
+#kitbull-section {
+  display: inline-block;
+  text-align: left;
+  width: 50vw;
+  font-family: calibri;
+  line-height: 25px;
+  background-color: #f8f8f8;
+}
+
+#kitbull-section span {
+  font-weight: 700;
+}
+
 /* The footer is placed at the bottom relative to its containing element (not the vp). 
   If line-height is the same figure as height, element would be centered vertically.
    */
@@ -660,6 +693,14 @@ media queries
     margin-right: var(--less-900-margins);
   }
 
+  #iframe-wrapper {
+    width: 75%;
+    padding-bottom: 40%;
+  }
+
+  #kitbull-section {
+    width: 75%;
+  }
 }
 
 @media screen and (max-width: 700px) {
@@ -678,6 +719,11 @@ media queries
 
   header nav {
     right: var(--less-700-margins);
+  }
+
+  header nav a {
+    padding-left: 10px;
+    padding-right: 10px;
   }
 
   #about-top-section {
@@ -730,11 +776,23 @@ media queries
   #footer-copyright {
     display: block;
   }
+
+
+  #iframe-wrapper {
+    width: 90%;
+    padding-bottom: 50%;
+  }
+
+  #kitbull-section {
+    width: 90%;
+  }
 }
 
 @media screen and (max-width: 600px) {
   header nav a {
     font-size: calc(15px + 1.0vw);
+    padding-left: 5px;
+    padding-right:  5px;
   }
 
   /* removing all special hovering styles for small devices */
