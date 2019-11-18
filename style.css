@@ -5,7 +5,7 @@
   --gray-color-grid: #fefefe;
   --header-height: 95px;
   --less-900-margins: 50px;
-  --less-700-margins: 25px;
+  --less-700-margins: 20px;
   --title-font-size: calc(20px + 1.5vw);
   --slow-transition: all 0.5s ease-in;
   --fast-transition: all 0.2s ease-in;
@@ -230,7 +230,8 @@ animations for the elements.
   grid-template-columns: 1fr 4fr;
   width: 65vw;
   margin: auto;
-  text-align: left;
+  text-align: justify;
+  text-justify: auto;
 }
 
 #about-section span.title {
@@ -528,7 +529,8 @@ while maintaining their aspect ratio.  */
 
 #kitbull-section {
   display: inline-block;
-  text-align: left;
+  text-align: justify;
+  text-justify: auto;
   width: 50vw;
   font-family: calibri;
   line-height: 25px;

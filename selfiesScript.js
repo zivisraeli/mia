@@ -172,7 +172,7 @@ navigationBtnClickedEvent = (theElemIndex) => {
 
 // =============================================================================
 // Like Toggling 
-// in order to find the specif heart element we query the id+.heart since the 
+// in order to find the specific heart element we query the id+.heart since the 
 // id property is with the figure element (the parent of the heart img).
 // =============================================================================
 toggleHeartEvent = (targetId) => {
