@@ -45,33 +45,34 @@ class GridItem extends Item {
     countElem.innerHTML = this.likeCount;
 
     updateLikesCookie();
+  }
 
-    // =============================================================================
-    // updateLikesCookie should be a private function. it implements a closure: 
-    // - gets 'likes' cookie (a string-ed array)
-    // - if not empty, JSON-parse it to convert the string to an array. 
-    // - push or remove (filter) an element based on gridItem.isLiked value.
-    // - JSON-stringify it to convert the array to a string. 
-    // - sets the cookie with the new string.
-    // =============================================================================
-    function updateLikesCookie() {
-      let likeArray = [];
-      let likeCookie = getCookie('likes');
-      if (likeCookie != null) {
-        likeArray = JSON.parse(likeCookie);
-      }
-      if (this.isLiked) {
-        likeArray.push(this.id);
-      } else {
-        let filteredArray = likeArray.filter((id) => {
-          return id != this.id;
-        });
-        likeArray = filteredArray;
-      }
 
-      likeCookie = JSON.stringify(likeArray);
-      setCookie('likes', likeCookie);
+  // =============================================================================
+  // updateLikesCookie should be a private function. it implements a closure: 
+  // - gets 'likes' cookie (a string-ed array)
+  // - if not empty, JSON-parse it to convert the string to an array. 
+  // - push or remove (filter) an element based on gridItem.isLiked value.
+  // - JSON-stringify it to convert the array to a string. 
+  // - sets the cookie with the new string.
+  // =============================================================================
+  function updateLikesCookie() {
+    let likeArray = [];
+    let likeCookie = getCookie('likes');
+    if (likeCookie != null) {
+      likeArray = JSON.parse(likeCookie);
     }
+    if (this.isLiked) {
+      likeArray.push(this.id);
+    } else {
+      let filteredArray = likeArray.filter((id) => {
+        return id != this.id;
+      });
+      likeArray = filteredArray;
+    }
+
+    likeCookie = JSON.stringify(likeArray);
+    setCookie('likes', likeCookie);
   }
 
   // =============================================================================
