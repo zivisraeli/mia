@@ -2,11 +2,15 @@ let state = {};
 
 // =============================================================================
 // Get all state elements
+// - the gridMap purpose is to map imgId to it's location in the gridItems so
+//   times when I need to search for it I don't need to loop through the array. 
+//   the map is populated during renderGrid. 
 // =============================================================================
 assignStateElements = () => {
 
   // grid general   
   state.gridItems = gridItems;
+  state.gridMap = new Map();  
   state.dynamicGrid = document.querySelector(".dynamic-grid");
   state.gridSection = document.querySelector("#grid-section");
 
@@ -50,13 +54,13 @@ addEvents = () => {
 
   // Modal's navEvent (next/previous buttons).
   state.nextBtn.onclick = (event) => {
-    let theNextIndex = (state.modalImgIndex + 1) === state.gridItems.length ? 0 : state.modalImgIndex + 1;
-    navigationBtnClickedEvent(theNextIndex);
+    state.modalImgIndex = (state.modalImgIndex + 1) === state.gridItems.length ? 0 : state.modalImgIndex + 1;
+    renderModalImg();
   }
 
   state.previousBtn.onclick = (event) => {
-    let thePreviousIndex = state.modalImgIndex === 0 ? state.gridItems.length - 1 : state.modalImgIndex - 1;
-    navigationBtnClickedEvent(thePreviousIndex);
+    state.modalImgIndex = state.modalImgIndex === 0 ? state.gridItems.length - 1 : state.modalImgIndex - 1;
+    renderModalImg();
   }
 
   // Modal's closeEvent.
@@ -73,10 +77,10 @@ addEvents = () => {
   window.onclick = (event) => {
     let clickedElemClass = event.target.className;
     if (clickedElemClass.startsWith("heart")) {
-      toggleHeartEvent(event.target.parentElement.id);
+      toggleHeart(event.target.parentElement.id);
     } else if (clickedElemClass.startsWith("grid-image")) {
-      let gridImgSrc = event.target.src;
-      renderModalImgEvent(gridImgSrc);
+      state.modalImgIndex = state.gridMap.get(event.target.parentElement.id);
+      renderModalImg();
       state.gridSection.classList.remove("un-blurred");
       state.gridSection.classList.add("blurred");
     } else {
@@ -160,11 +164,11 @@ addEvents = () => {
 
 // =============================================================================
 // invoked by navigation buttons to retrieve and render another image on the modal popup. 
+// priot to invoking the function, the state.modalImgIndex is set properly. 
 // =============================================================================
-navigationBtnClickedEvent = (theElemIndex) => {
-  let theElem = state.gridItems[theElemIndex];
-  let theSrc = theElem.src;
-  renderModalImgEvent(theSrc);
+renderModalImg = () => {
+  let gridItem = state.gridItems[state.modalImgIndex];
+  gridItem.renderModalImg();
 
   // So it won't bubble into window.onclick().
   event.stopPropagation();
@@ -172,77 +176,11 @@ navigationBtnClickedEvent = (theElemIndex) => {
 
 // =============================================================================
 // Like Toggling 
-// in order to find the specific heart element we query the id+.heart since the 
-// id property is with the figure element (the parent of the heart img).
 // =============================================================================
-toggleHeartEvent = (targetId) => {
-  // Get the target element based on the target id
-  let theTarget = document.querySelector(`#${targetId} .heart`);
-
-  // Based on the target id, find the element in the state.gridItems and:
-  //   - toggle the isLiked value.
-  //   - increment/decrement the likeCount.
-  //   - render the right icon with/without the animation.
-  let gridItem = state.gridItems.find((obj) => {
-    return obj.id === targetId;
-  });
-
-  if (gridItem.isLiked) {
-    gridItem.isLiked = false;
-    gridItem.likeCount--;
-    theTarget.setAttribute("src", "images/heart-outline.png");
-    theTarget.setAttribute("class", "heart");
-  } else {
-    gridItem.isLiked = true;
-    gridItem.likeCount++;
-    theTarget.setAttribute("src", "images/heart-full.png");
-    theTarget.setAttribute("class", "heart animatedHeartBeat");
-  }
-
-  // re-render the like count.
-  // we grab the parent (figure tag) from which we query for the like-count-span.
-  let parentElem = theTarget.parentElement;
-  let countElem = parentElem.querySelector("#like-count-span");
-  countElem.innerHTML = gridItem.likeCount;
-
-  updateLikesCookie(gridItem);
-}
-
-// =============================================================================
-// renderModalImgEvent would render the clicked img inside the modal div.
-// =============================================================================
-renderModalImgEvent = (imgSrc) => {
-  let arrSrc = imgSrc.match('(.*mia-).*-(.*)(\.jpg$)');
-  let modalImgSrc = arrSrc[1] + arrSrc[2] + arrSrc[3];
-  state.modalImg.setAttribute("src", modalImgSrc);
-
-  // I save the index of the selected img for the next/previous operations
-  // so I can simply go to the next/previous element inthe gridItems array. 
-  let selectedImgId = arrSrc[2];
-  state.modalImgIndex = state.gridItems.findIndex((element) => {
-    return element.id === selectedImgId;
-  });
-
-  let theCaption = state.gridItems[state.modalImgIndex].caption;
-  let theLikeCount = state.gridItems[state.modalImgIndex].likeCount;
-  state.modalImgText.innerHTML = theCaption;
-  state.modalImgLikeCount.innerHTML = `${theLikeCount}&nbsp<img src="images/heart-likes.png" class="heart-likes-icon"/>'s`;
-
-  // Upon loading the img I need to get its "natural" size.
-  // Since I place the modal-content-div 110px from the top it's not included in the vp Height. 
-  // Yet, the max width of an image would be 75% of the vp. 
-  state.modalImg.onload = function() {
-    let imgW = state.modalImg.naturalWidth;
-    let imgH = state.modalImg.naturalHeight;
-    let vpW = document.documentElement.clientWidth;
-    let vpH = document.documentElement.clientHeight - 110;
-    let imgPropotion = imgW / imgH;
-    let newW = imgPropotion * vpH;
-    state.modalContentDiv.style.width = newW + "px";
-
-    // Finally, display it. 
-    state.modalCotainerDiv.style.display = "block";
-  }
+toggleHeart = (itemId) => {
+  let gridIndex = state.gridMap.get(itemId);
+  let gridItem = state.gridItems[gridIndex]; 
+  gridItem.toggleLikeCount();
 }
 
 // =============================================================================
@@ -277,7 +215,7 @@ swipeTouchEndEvent = (event) => {
 
     if ((xDiff > 25) && (yDiff < 25)) {
       if (state.xUp > state.xDown) {
-        toggleHeartEvent(theTouch.target.parentElement.id);
+        toggleHeart(theTouch.target.parentElement.id);
       } else {
         setHeaderImgEvent(theTouch.target);
       }
@@ -375,6 +313,7 @@ readSortCookie = () => {
 renderGrid = () => {
   // get the grid element and blank it out. 
   state.dynamicGrid.innerHTML = '';
+  state.gridMap.clear();
 
   // loop through the state.gridItems array and construct the grid.
   state.gridItems.forEach((elem, i) => {
@@ -398,6 +337,8 @@ renderGrid = () => {
          </figcaption>
          <img class="heart" src=${heartImg} />
        </figure>`;
+
+    state.gridMap.set(id, i);
   });
 }
 
@@ -421,32 +362,6 @@ gridImgsOnloadAssignment = () => {
       }
     });
   });
-}
-
-// =============================================================================
-// 1. get 'likes' cookie (a string-ed array)
-// 2. if not empty, JSON-parse it to convert the string to an array. 
-// 3. push or remove (filter) an element based on gridItem.isLiked value.
-// 4. JSON-stringify it to convert the array to a string. 
-// 5. set the cookie with the new string.
-// =============================================================================
-updateLikesCookie = (gridItem) => {
-  let likeArray = [];
-  let likeCookie = getCookie('likes');
-  if (likeCookie != null) {
-    likeArray = JSON.parse(likeCookie);
-  }
-  if (gridItem.isLiked) {
-    likeArray.push(gridItem.id);
-  } else {
-    let filteredArray = likeArray.filter((id) => {
-      return id != gridItem.id;
-    });
-    likeArray = filteredArray;
-  }
-
-  likeCookie = JSON.stringify(likeArray);
-  setCookie('likes', likeCookie);
 }
 
 // =============================================================================
