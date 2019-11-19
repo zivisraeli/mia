@@ -57,7 +57,7 @@ class GridItem extends Item {
     // 4. JSON-stringify it to convert the array to a string. 
     // 5. set the cookie with the new string.
     // =============================================================================
-    updateLikesCookie = () => {
+    function updateLikesCookie() {
       let likeArray = [];
       let likeCookie = getCookie('likes');
       if (likeCookie != null) {
