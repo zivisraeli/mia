@@ -30,6 +30,8 @@ currentMenuEntry = () => {
     anchor = document.querySelector('nav span#selfies');
   } else if (pageName.includes("fans.html")) {
     anchor = document.querySelector('nav span#fans');
+  } else if (pageName.includes("kitbull.html")) {
+    anchor = document.querySelector('nav span#kitbull');
   } else {
     anchor = document.querySelector('nav span#index');
   }
@@ -40,17 +42,17 @@ currentMenuEntry = () => {
 // Based on a cookie value find the header img id and set the image accordingly.
 // =============================================================================
 setHeaderImage = () => {
-    let headerImgId = getCookie("headerImgId");
-    headerImgId = headerImgId === null ? 'small-id02' : headerImgId;
-    let headerImgSrc = `images/mia-${headerImgId}.jpg`;
-    let headerImgElem = document.querySelector("header img");
-    headerImgElem.setAttribute("src", headerImgSrc);  
+  let headerImgId = getCookie("headerImgId");
+  headerImgId = headerImgId === null ? 'small-id02' : headerImgId;
+  let headerImgSrc = `images/mia-${headerImgId}.jpg`;
+  let headerImgElem = document.querySelector("header img");
+  headerImgElem.setAttribute("src", headerImgSrc);
 
-    // Without this function the border will be drawn first as a straight line and then 
-    // the image would appear. I'm waiting for the image to be loaded frist. 
-    headerImgElem.onload = function() {
-      headerImgElem.style.border = "1px solid black";
-    }
+  // Without this function the border will be drawn first as a straight line and then 
+  // the image would appear. I'm waiting for the image to be loaded frist. 
+  headerImgElem.onload = function() {
+    headerImgElem.style.border = "1px solid black";
+  }
 }
 
 // =============================================================================
