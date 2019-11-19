@@ -23,6 +23,7 @@ class GridItem extends Item {
   //   - render the right icon with/without the animation.
   // =============================================================================
   toggleLikeCount = () => {
+
     // Get the target element based on the item id
     let theElement = document.querySelector(`#${this.id} .heart`);
 
@@ -38,39 +39,43 @@ class GridItem extends Item {
       theElement.setAttribute("class", "heart animatedHeartBeat");
     }
 
-    // re-render the like count.
+    // re-render the like count number (since it was incremented/decremented through the toggle).
     // we grab the parent (figure tag) from which we query for the like-count-span.
-    let parentElem = theElement.parentElement;
-    let countElem = parentElem.querySelector("#like-count-span");
+    let countElem = theElement.parentElement.querySelector("#like-count-span");
     countElem.innerHTML = this.likeCount;
 
-    this.updateLikesCookie();
-  }
+    // to make updateLikesCookie() private it's nested within toggleLikeCount()
+    // however, 'this' will is out of scope to the nested method and so, I preserve it
+    // by assigning it to 'that'. 
+    // Otherwise, this would be 'undefined' (prior to JS-5 it would've been the global 'window' object)
+    let that = this;
+    updateLikesCookie();
 
-  // =============================================================================
-  // 1. get 'likes' cookie (a string-ed array)
-  // 2. if not empty, JSON-parse it to convert the string to an array. 
-  // 3. push or remove (filter) an element based on gridItem.isLiked value.
-  // 4. JSON-stringify it to convert the array to a string. 
-  // 5. set the cookie with the new string.
-  // =============================================================================
-  updateLikesCookie = () => {
-    let likeArray = [];
-    let likeCookie = getCookie('likes');
-    if (likeCookie != null) {
-      likeArray = JSON.parse(likeCookie);
-    }
-    if (this.isLiked) {
-      likeArray.push(this.id);
-    } else {
-      let filteredArray = likeArray.filter((id) => {
-        return id != this.id;
-      });
-      likeArray = filteredArray;
-    }
+    // =============================================================================
+    // 1. get 'likes' cookie (a string-ed array)
+    // 2. if not empty, JSON-parse it to convert the string to an array. 
+    // 3. push or remove (filter) an element based on gridItem.isLiked value.
+    // 4. JSON-stringify it to convert the array to a string. 
+    // 5. set the cookie with the new string.
+    // =============================================================================
+    function updateLikesCookie() {
+      let likeArray = [];
+      let likeCookie = getCookie('likes');
+      if (likeCookie != null) {
+        likeArray = JSON.parse(likeCookie);
+      }
+      if (that.isLiked) {
+        likeArray.push(that.id);
+      } else {
+        let filteredArray = likeArray.filter((id) => {
+          return id != that.id;
+        });
+        likeArray = filteredArray;
+      }
 
-    likeCookie = JSON.stringify(likeArray);
-    setCookie('likes', likeCookie);
+      likeCookie = JSON.stringify(likeArray);
+      setCookie('likes', likeCookie);
+    }
   }
 
   // =============================================================================
