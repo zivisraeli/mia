@@ -22,8 +22,7 @@ class GridItem extends Item {
   //   - increment/decrement the likeCount.
   //   - render the right icon with/without the animation.
   // =============================================================================
-  toggleLikeCount = () => {
-
+  toggleLikeCount() {
     // Find the heart element based on the item id
     let heartElement = document.querySelector(`#${this.id} .heart`);
 
@@ -58,7 +57,7 @@ class GridItem extends Item {
     // 4. JSON-stringify it to convert the array to a string. 
     // 5. set the cookie with the new string.
     // =============================================================================
-    function updateLikesCookie() {
+    updateLikesCookie = () => {
       let likeArray = [];
       let likeCookie = getCookie('likes');
       if (likeCookie != null) {
@@ -81,7 +80,7 @@ class GridItem extends Item {
   // =============================================================================
   // renderModalImgEvent would render the clicked img inside the modal div.
   // =============================================================================
-  renderModalImg = () => {
+  renderModalImg() {
     // remove the 'small' portion of the src field value. 
     // i.e. "mia-small-id07.jpg" => "mia-id07.jpg"
     let arrSrc = this.src.match('(.*mia-).*-(.*)(\.jpg$)');
