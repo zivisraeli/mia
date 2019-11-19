@@ -1,4 +1,4 @@
-let gridItems = [
+state.gridItems = [
   new GridItem("id00", "images/mia-small-id00.jpg", "First Shower I", "04/18/2019", 35, false),
   new GridItem("id01", "images/mia-small-id01.jpg", "Daddy Ziv I", "05/06/2019", 23, false),
   new GridItem("id02", "images/mia-small-id02.jpg", "Me, Pretty", "10/02/2019", 5, false),

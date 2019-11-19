@@ -1,5 +1,3 @@
-let state = {};
-
 // =============================================================================
 // Get all state elements
 // - the gridMap purpose is to map imgId to it's location in the gridItems so
@@ -9,8 +7,7 @@ let state = {};
 assignStateElements = () => {
 
   // grid general   
-  state.gridItems = gridItems;
-  state.gridMap = new Map();  
+  state.gridMap = new Map();
   state.dynamicGrid = document.querySelector(".dynamic-grid");
   state.gridSection = document.querySelector("#grid-section");
 
@@ -24,16 +21,16 @@ assignStateElements = () => {
   state.nextBtn = document.getElementById("next-btn");
   state.previousBtn = document.getElementById("prev-btn");
 
-  // used by the next/previous img btn. 
-  state.modalImgIndex = 0;
-
   // is assigned the onchange event.
   state.selectSort = document.getElementById('select-sort');
 
   // the target of drag operation.
   state.headerImg = document.querySelector('#header-img');
   state.draggedIntoDiv = document.querySelector('header #dragged-into-div');
-  state.draggedImg = '';
+
+  // misc.
+  state.spinnerDiv = document.getElementById("spinner-div");
+  state.selectOptionDiv = document.getElementById("select-option-div");
 
   // to detect finger swipe on mobile device
   state.xDown = 0;
@@ -41,10 +38,8 @@ assignStateElements = () => {
   state.xUp = 0;
   state.yUp = 0;
 
-  // misc.
-  state.spinnerDiv = document.getElementById("spinner-div");
-  state.selectOptionDiv = document.getElementById("select-option-div");
-  state.counter = 0;
+  // used by the next/previous img btn. 
+  state.modalImgIndex = 0;
 };
 
 // =============================================================================
@@ -52,7 +47,7 @@ assignStateElements = () => {
 // =============================================================================
 addEvents = () => {
 
-  // Modal's navEvent (next/previous buttons).
+  // modal's navEvent (next/previous buttons).
   state.nextBtn.onclick = (event) => {
     state.modalImgIndex = (state.modalImgIndex + 1) === state.gridItems.length ? 0 : state.modalImgIndex + 1;
     renderModalImg();
@@ -63,17 +58,17 @@ addEvents = () => {
     renderModalImg();
   }
 
-  // Modal's closeEvent.
+  // modal's closeEvent.
   state.modalImgCloseBtn.onclick = () => {
     state.modalCotainerDiv.style.display = "none";
     state.gridSection.classList.remove("blurred");
     state.gridSection.classList.add("un-blurred");
   }
 
-  // Onclick events that are related to each grid's image:
-  //   - likeEvent: like/unlike an image. I get the id from the parent element (figure tag)
-  //   - modalEvent: render popup modal image and blur the background. 
-  //   - if the modal is ON, then unblur the grid background upon closing a modal. 
+  // onclick events that are related to each grid's image:
+  // - likeEvent: like/unlike an image. I get the id from the parent element (figure tag)
+  // - modalEvent: render popup modal image and blur the background. 
+  // - if the modal is ON, then unblur the grid background upon closing a modal. 
   window.onclick = (event) => {
     let clickedElemClass = event.target.className;
     if (clickedElemClass.startsWith("heart")) {
@@ -93,8 +88,40 @@ addEvents = () => {
   }
 
   // touchEvents
-  window.addEventListener('touchstart', swipeTouchStartEvent, false);
-  window.addEventListener('touchend', swipeTouchEndEvent, false);
+  // I'm using the event.changedTouches rather then the event.touches since during
+  // the touchEnd event only the changedTouches property is populated.
+  window.addEventListener('touchstart', (event) => {
+    let clickedElemClass = event.target.className;
+    if (clickedElemClass.startsWith("grid-image")) {
+      let theTouch = event.changedTouches[0];
+      state.xDown = theTouch.clientX;
+      state.yDown = theTouch.clientY;
+    }
+  });
+
+  // the xDiff condition is to make sure a long swipe was excuted.
+  // the yDiff condition is to make sure the swipe was mostly horizontal. 
+  // swipe to the right - toggle the heart image.
+  // swipe to the left - change the header's image. 
+  window.addEventListener('touchend', (event) => {
+    let clickedElemClass = event.target.className;
+    if (clickedElemClass.startsWith("grid-image")) {
+      let theTouch = event.changedTouches[0];
+      state.xUp = theTouch.clientX;
+      state.yUp = theTouch.clientY;
+
+      let xDiff = Math.abs(state.xDown - state.xUp);
+      let yDiff = Math.abs(state.yDown - state.yUp);
+
+      if ((xDiff > 25) && (yDiff < 25)) {
+        if (state.xUp > state.xDown) {
+          toggleHeart(theTouch.target.parentElement.id);
+        } else {
+          setHeaderImgEvent(theTouch.target);
+        }
+      }
+    }
+  });
 
   // selectEvents. Upon selecting an option:
   // - sort the array.
@@ -124,10 +151,12 @@ addEvents = () => {
   }
 
   // dragEvents
+  // attaching the event.target to the dynamically-created state.draggedIntoDiv.draggedImg property. 
+  // it is used as a "global variable" that is read upon "drop" event. 
   state.dynamicGrid.addEventListener("dragstart", (event) => {
     let clickedElemClass = event.target.className;
     if (clickedElemClass === "grid-image") {
-      state.draggedImg = event.target;
+      state.draggedIntoDiv.draggedImg = event.target;
     }
   });
 
@@ -142,7 +171,7 @@ addEvents = () => {
   // - set the headerImgId cookie.
   // - remove the cue styling.
   state.draggedIntoDiv.addEventListener("drop", (event) => {
-    setHeaderImgEvent(state.draggedImg);
+    setHeaderImgEvent(state.draggedIntoDiv.draggedImg);
     state.headerImg.classList.remove("img-hovered");
   });
 
@@ -179,48 +208,8 @@ renderModalImg = () => {
 // =============================================================================
 toggleHeart = (itemId) => {
   let gridIndex = state.gridMap.get(itemId);
-  let gridItem = state.gridItems[gridIndex]; 
+  let gridItem = state.gridItems[gridIndex];
   gridItem.toggleLikeCount();
-}
-
-// =============================================================================
-// invoked by the touchstart and touchend events.
-// I'm using the event.chagnedTouches rather then the event.touches since during
-// the touchEnd event only the changedTouches propery is populated. 
-// =============================================================================
-swipeTouchStartEvent = (event) => {
-  let clickedElemClass = event.target.className;
-  if (clickedElemClass.startsWith("grid-image")) {
-    let theTouch = event.changedTouches[0];
-    state.xDown = theTouch.clientX;
-    state.yDown = theTouch.clientY;
-  }
-}
-
-// =============================================================================
-// the xDiff condition is to make sure a long swipe was excuted.
-// the yDiff condition is to make sure the swipe was mostly horizontal. 
-// swipe to the right - toggle the heart image.
-// swipe to the left - change the header's image. 
-// =============================================================================
-swipeTouchEndEvent = (event) => {
-  let clickedElemClass = event.target.className;
-  if (clickedElemClass.startsWith("grid-image")) {
-    let theTouch = event.changedTouches[0];
-    state.xUp = theTouch.clientX;
-    state.yUp = theTouch.clientY;
-
-    let xDiff = Math.abs(state.xDown - state.xUp);
-    let yDiff = Math.abs(state.yDown - state.yUp);
-
-    if ((xDiff > 25) && (yDiff < 25)) {
-      if (state.xUp > state.xDown) {
-        toggleHeart(theTouch.target.parentElement.id);
-      } else {
-        setHeaderImgEvent(theTouch.target);
-      }
-    }
-  }
 }
 
 // =============================================================================
@@ -347,16 +336,18 @@ renderGrid = () => {
 // To avoid it:
 //   - initially, during image loading, the grid section is hidden. 
 //   - during this tim, the spinner-div is visibly spinning. 
-//   - each image, upon loading, increments state.counter.
+//   - each image, upon loading, increments state.dynamicGrid.loadedImgCounter.
+//   - state.dynamicGrid.loadedImgCounter is dynamically-created property.
 //   - once the counter === the array size the grid section becomes visible and the spinner-div is removed. 
 //   - display = "none" would remove the element from the DOM altogther rather then hiding it. 
 // =============================================================================
 gridImgsOnloadAssignment = () => {
   let allImgs = state.dynamicGrid.querySelectorAll(".grid-image");
+  state.dynamicGrid.loadedImgCounter = 0;
   allImgs.forEach((elem) => {
     elem.addEventListener("load", (event) => {
-      state.counter++;
-      if (state.counter === state.gridItems.length) {
+      state.dynamicGrid.loadedImgCounter++;
+      if (state.dynamicGrid.loadedImgCounter === state.gridItems.length) {
         state.dynamicGrid.style.visibility = "visible";
         state.spinnerDiv.style.display = "none";
       }
