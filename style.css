@@ -770,8 +770,8 @@ media queries
 
   /* the two footer spans are split veritically */
   footer {
-    height: 50px;
-    line-height: 20px;
+    height: calc(var(--footer-height) + 10px);
+    line-height: calc(var(--footer-height) - 10px);
   }
 
   #footer-divider {
@@ -842,4 +842,7 @@ media queries
     margin-left: 0px;
   }
 
+  footer {
+    height: calc(var(--footer-height) + 30px);
+  }
 }
