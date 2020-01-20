@@ -270,17 +270,14 @@ readLikesCookie = () => {
 // - sort the grid items array.
 // =============================================================================
 readSortCookie = () => {
-  // set default values in case there is no cookie yet.
-  let sortAttr = 'likes';
-  let sortDirection = -1;
   let sortCookie = getCookie('sort');
   if (sortCookie === null) {
-    sortCookie = "likes-1";
-  } else {
-    let sortArr = sortCookie.match('(.*)([-+]1)');
-    sortAttr = sortArr[1];
-    sortDirection = sortArr[2];
+    sortCookie = "likes-1";  // default value.
   }
+
+  let sortArr = sortCookie.match('(.*)([-+]1)');
+  let sortAttr = sortArr[1];
+  let sortDirection = sortArr[2];
 
   // Find the select option element pointed to by the cookie and add 'selected' attribute.
   // The options carry the same id as the cookie.

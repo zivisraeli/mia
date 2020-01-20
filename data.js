@@ -32,5 +32,8 @@ state.gridItems = [
   new GridItem("id31", "images/mia-small-id31.jpg", "First Shower II", "04/18/2019", 21, false),
   new GridItem("id32", "images/mia-small-id32.jpg", "Play Time", "09/09/2019", 15, false),
   new GridItem("id33", "images/mia-small-id33.jpg", "Napping III", "11/02/2019", 45, false),
-  new GridItem("id34", "images/mia-small-id34.jpg", "Napping IV", "11/11/2019", 9, false)
+  new GridItem("id34", "images/mia-small-id34.jpg", "Napping IV", "11/11/2019", 9, false),
+  new GridItem("id35", "images/mia-small-id35.jpg", "Playing I", "01/09/2020", 12, false),
+  new GridItem("id36", "images/mia-small-id36.jpg", "Playing II", "01/09/2020", 21, false),
+  new GridItem("id37", "images/mia-small-id37.jpg", "Playing III", "01/09/2020", 9, false)
 ];
