@@ -219,7 +219,7 @@ toggleHeart = (itemId) => {
 setHeaderImgEvent = (imgElem) => {
   let newImgSrc = imgElem.getAttribute("src");
   state.headerImg.setAttribute("src", newImgSrc);
-  let imgId = newImgSrc.match('mia-(.*).jpg')[1];
+  let imgId = newImgSrc.match('mia-small-(.*).jpg')[1];
   setCookie("headerImgId", imgId);
 }
 

@@ -43,7 +43,7 @@ currentMenuEntry = () => {
 // =============================================================================
 setHeaderImage = () => {
   let headerImgId = getCookie("headerImgId");
-  headerImgId = headerImgId === null ? 'small-id02' : headerImgId;
+  headerImgId = headerImgId === null ? 'small-id02' : 'small-'+headerImgId;
   let headerImgSrc = `images/mia-${headerImgId}.jpg`;
   let headerImgElem = document.querySelector("header img");
   headerImgElem.setAttribute("src", headerImgSrc);
