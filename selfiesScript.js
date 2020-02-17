@@ -272,7 +272,7 @@ readLikesCookie = () => {
 readSortCookie = () => {
   let sortCookie = getCookie('sort');
   if (sortCookie === null) {
-    sortCookie = "likes-1";  // default value.
+    sortCookie = "likes-1"; // default value.
   }
 
   let sortArr = sortCookie.match('(.*)([-+]1)');
@@ -329,28 +329,14 @@ renderGrid = () => {
 }
 
 // =============================================================================
-// Since it takes some time to load the images there is some "jitter".
-// To avoid it:
-//   - initially, during image loading, the grid section is hidden. 
-//   - during this tim, the spinner-div is visibly spinning. 
-//   - each image, upon loading, increments state.dynamicGrid.loadedImgCounter.
-//   - state.dynamicGrid.loadedImgCounter is dynamically-created property.
-//   - once the counter === the array size the grid section becomes visible and the spinner-div is removed. 
-//   - display = "none" would remove the element from the DOM altogther rather then hiding it. 
+// - During the lengthy grid-images load time I display a spinner.
+// - When all the images are loaded, the window's load-event is fired.
+// - At that time I would turn the grid from invisible to visible and hide the spinner.
 // =============================================================================
-gridImgsOnloadAssignment = () => {
-  let allImgs = state.dynamicGrid.querySelectorAll(".grid-image");
-  state.dynamicGrid.loadedImgCounter = 0;
-  allImgs.forEach((elem) => {
-    elem.addEventListener("load", (event) => {
-      state.dynamicGrid.loadedImgCounter++;
-      if (state.dynamicGrid.loadedImgCounter === state.gridItems.length) {
-        state.dynamicGrid.style.visibility = "visible";
-        state.spinnerDiv.style.display = "none";
-      }
-    });
-  });
-}
+window.addEventListener('load', (event) => {
+  state.dynamicGrid.style.visibility = "visible";
+  state.spinnerDiv.style.display = "none";
+});
 
 // =============================================================================
 // Initial function invocations
@@ -370,6 +356,3 @@ readSortCookie();
 
 // Now we are ready to render the grid.
 renderGrid();
-
-// Assign onload event to all images. 
-gridImgsOnloadAssignment();
