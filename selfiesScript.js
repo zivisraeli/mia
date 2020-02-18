@@ -171,6 +171,7 @@ addEvents = () => {
   // - set the headerImgId cookie.
   // - remove the cue styling.
   state.draggedIntoDiv.addEventListener("drop", (event) => {
+    event.preventDefault();
     setHeaderImgEvent(state.draggedIntoDiv.draggedImg);
     state.headerImg.classList.remove("img-hovered");
   });
