@@ -323,6 +323,10 @@ the grid
   background: #ffffcc;
 }
 
+#filter-input {
+  width: 90px;
+}
+
 hr {
   margin-bottom: 20px;
   border-bottom: none;

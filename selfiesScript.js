@@ -1,13 +1,10 @@
 // =============================================================================
-// Get all state elements
-// - the gridMap purpose is to map imgId to it's location in the gridItems so
-//   times when I need to search for it I don't need to loop through the array. 
-//   the map is populated during renderGrid. 
+// The purpose of assigning all these DOM elements to some global variables,
+// is to avoid calling the query selector over and over again. 
 // =============================================================================
 assignStateElements = () => {
 
   // grid general   
-  state.gridMap = new Map();
   state.dynamicGrid = document.querySelector(".dynamic-grid");
   state.gridSection = document.querySelector("#grid-section");
 
@@ -31,6 +28,7 @@ assignStateElements = () => {
   // misc.
   state.spinnerDiv = document.getElementById("spinner-div");
   state.selectOptionDiv = document.getElementById("select-option-div");
+  state.filterInput = document.getElementById("filter-input");
 
   // to detect finger swipe on mobile device
   state.xDown = 0;
@@ -40,6 +38,9 @@ assignStateElements = () => {
 
   // used by the next/previous img btn. 
   state.modalImgIndex = 0;
+
+  state.filteredGridItems = null;
+  state.filterString = "";
 };
 
 // =============================================================================
@@ -49,12 +50,12 @@ addEvents = () => {
 
   // modal's navEvent (next/previous buttons).
   state.nextBtn.onclick = (event) => {
-    state.modalImgIndex = (state.modalImgIndex + 1) === state.gridItems.length ? 0 : state.modalImgIndex + 1;
+    state.modalImgIndex = (state.modalImgIndex + 1) === state.filteredGridItems.length ? 0 : state.modalImgIndex + 1;
     renderModalImg();
   }
 
   state.previousBtn.onclick = (event) => {
-    state.modalImgIndex = state.modalImgIndex === 0 ? state.gridItems.length - 1 : state.modalImgIndex - 1;
+    state.modalImgIndex = state.modalImgIndex === 0 ? state.filteredGridItems.length - 1 : state.modalImgIndex - 1;
     renderModalImg();
   }
 
@@ -74,7 +75,8 @@ addEvents = () => {
     if (clickedElemClass.startsWith("heart")) {
       toggleHeart(event.target.parentElement.id);
     } else if (clickedElemClass.startsWith("grid-image")) {
-      state.modalImgIndex = state.gridMap.get(event.target.parentElement.id);
+      let itemId = event.target.parentElement.id
+      state.modalImgIndex = state.filteredGridItems.map((gridItem) => gridItem.id).indexOf(itemId);
       renderModalImg();
       state.gridSection.classList.remove("un-blurred");
       state.gridSection.classList.add("blurred");
@@ -150,6 +152,11 @@ addEvents = () => {
     renderGrid();
   }
 
+  state.filterInput.oninput = (event) => {
+    state.filterString = event.target.value;
+    renderGrid();
+  }
+
   // dragEvents
   // attaching the event.target to the dynamically-created state.draggedIntoDiv.draggedImg property. 
   // it is used as a "global variable" that is read upon "drop" event. 
@@ -197,7 +204,7 @@ addEvents = () => {
 // priot to invoking the function, the state.modalImgIndex is set properly. 
 // =============================================================================
 renderModalImg = () => {
-  let gridItem = state.gridItems[state.modalImgIndex];
+  let gridItem = state.filteredGridItems[state.modalImgIndex];
   gridItem.renderModalImg();
 
   // So it won't bubble into window.onclick().
@@ -208,8 +215,8 @@ renderModalImg = () => {
 // Like Toggling 
 // =============================================================================
 toggleHeart = (itemId) => {
-  let gridIndex = state.gridMap.get(itemId);
-  let gridItem = state.gridItems[gridIndex];
+  let gridIndex = state.filteredGridItems.map((gridItem) => gridItem.id).indexOf(itemId);
+  let gridItem = state.filteredGridItems[gridIndex];
   gridItem.toggleLikeCount();
 }
 
@@ -300,10 +307,15 @@ readSortCookie = () => {
 renderGrid = () => {
   // get the grid element and blank it out. 
   state.dynamicGrid.innerHTML = '';
-  state.gridMap.clear();
+
+  state.filteredGridItems = state.gridItems.filter((gridItem) => {
+    let boolean = gridItem.caption.toLowerCase().includes(state.filterString);
+    return boolean;
+  });
+  
 
   // loop through the state.gridItems array and construct the grid.
-  state.gridItems.forEach((elem, i) => {
+  state.filteredGridItems.forEach((elem, i) => {
     let id = elem.id;
     let src = elem.src;
     let caption = elem.caption;
@@ -324,8 +336,6 @@ renderGrid = () => {
          </figcaption>
          <img class="heart" src=${heartImg} />
        </figure>`;
-
-    state.gridMap.set(id, i);
   });
 }
 
