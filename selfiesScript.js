@@ -43,21 +43,37 @@ assignStateElements = () => {
   state.filterString = "";
 };
 
+changeModalImg = (direction) => {
+  if (direction === "next")
+    state.modalImgIndex = (state.modalImgIndex + 1) === state.filteredGridItems.length ? 0 : state.modalImgIndex + 1;
+  else if (direction === "prev")
+    state.modalImgIndex = state.modalImgIndex === 0 ? state.filteredGridItems.length - 1 : state.modalImgIndex - 1;
+
+  renderModalImg();
+}
+
 // =============================================================================
 // Add all events.
 // =============================================================================
 addEvents = () => {
 
-  // modal's navEvent (next/previous buttons).
+  // Navigating left & right through the modal images can be done:
+  // 1. through the left & right btn-images - listening to onclick events on these images.
+  // 2. through the left & right keyboard's keys - listening to keydown event on the document. 
   state.nextBtn.onclick = (event) => {
-    state.modalImgIndex = (state.modalImgIndex + 1) === state.filteredGridItems.length ? 0 : state.modalImgIndex + 1;
-    renderModalImg();
+    changeModalImg("next");
   }
 
   state.previousBtn.onclick = (event) => {
-    state.modalImgIndex = state.modalImgIndex === 0 ? state.filteredGridItems.length - 1 : state.modalImgIndex - 1;
-    renderModalImg();
+    changeModalImg("prev");
   }
+
+  document.addEventListener("keydown", (event) => {
+    if (event.key === "ArrowRight")
+      changeModalImg("next");
+    else if (event.key === "ArrowLeft")
+      changeModalImg("prev");
+  });
 
   // modal's closeEvent.
   state.modalImgCloseBtn.onclick = () => {
@@ -197,6 +213,7 @@ addEvents = () => {
       state.headerImg.classList.remove("img-hovered");
     }
   });
+
 }
 
 // =============================================================================
@@ -312,7 +329,6 @@ renderGrid = () => {
     let boolean = gridItem.caption.toLowerCase().includes(state.filterString);
     return boolean;
   });
-  
 
   // loop through the state.gridItems array and construct the grid.
   state.filteredGridItems.forEach((elem, i) => {
