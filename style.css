@@ -7,8 +7,8 @@
   --less-900-margins: 50px;
   --less-700-margins: 20px;
   --title-font-size: calc(20px + 1.5vw);
-  --slow-transition: all 0.5s ease-in;
-  --fast-transition: all 0.2s ease-in;
+  --slow-transition: all 0.5s linear;
+  --fast-transition: all 0.2s linear;
   --footer-height: 30px;
 }
 
@@ -45,7 +45,7 @@ header {
 header #dragged-into-div {
   position: absolute;
   top: 5px;
-  left: 150px;
+  left: 10%;
   width: 200px;
   height: 200px;
 }
@@ -78,7 +78,7 @@ header #dragged-into-div #header-img.img-hovered {
 ============================================================================= */
 header nav {
   position: absolute;
-  right: 100px;
+  right: 5%;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -258,24 +258,59 @@ animations for the elements.
 - customized ul element
 - ul is a block element and so need to turn it into inline-block in order to center it. 
 ============================================================================= */
+ul {
+  list-style-type: none;
+}
+
+.news-about-ul {
+  padding-left: 30px;
+}
+
+.news-about-ul .fa-circle {
+  font-size: 40%;
+  color: black;
+  margin-right: 10px;
+  vertical-align: middle;
+  margin-top: -2px;
+}
+
+.news-about-ul li:last-child {
+  font-style: italic;
+}
+
 .customed-ul {
   display: inline-block;
   text-align: left;
-  list-style-type: none;
-  padding-left: 45px;
-  margin-top: 0px;
+  margin: 0px;
 }
 
-.customed-ul li {
-  margin-top: 7px;
+.customed-ul>li {
+  margin-bottom: 5px;
 }
 
-.customed-ul li::before {
-  margin-left: -12px;
-  content: url('images/bullet-icon-new.png');
-  margin-right: 4px;
+.customed-ul li .li-icon {
+  font-size: 50%;
+  color: orange;
+  margin-right: 10px;
+  vertical-align: middle;
+  margin-top: -2px;
+  text-shadow: 0px 0px 5px black;
+  border: 1px solid gray;
+  border-radius: 50%;
+}
+
+/*
+#form-header .customed-ul li::before {
+  font-family: 'FontAwesome';
+  content: '\f111';
+  color: orange;
+  font-size: 50%;
   display: inline-block;
+  text-shadow: 0px 0px 5px black;
+  border: 1px solid gray;
+  border-radius: 60%;
 }
+*/
 
 /* =============================================================================
 the grid
@@ -286,8 +321,8 @@ the grid
 }
 
 #grid-section {
-  margin-left: 150px;
-  margin-right: 150px;
+  margin-left: 10%;
+  margin-right: 10%;
   font-family: calibri;
 }
 
@@ -305,17 +340,18 @@ the grid
 }
 
 #select-option-div select {
-  padding: 3px;
+  padding: 2px;
   width: 150px;
   border-radius: .2em;
   font-size: 13px;
   background: linear-gradient(to bottom, #ffffff, orange);
+  box-shadow: 1px 1px 4px #C0C0C0;
   outline: none;
 }
 
 /* I chose box-shadow rather then border manipulation to avoid "jitter" */
 #select-option-div select:hover {
-  box-shadow: 0 0 2px 2px var(--gray-color-border);
+  box-shadow: 0 0 1px 1px var(--gray-color-border);
   cursor: pointer;
 }
 
@@ -325,6 +361,7 @@ the grid
 
 #filter-input {
   width: 90px;
+  height: 21px;
 }
 
 hr {
@@ -365,6 +402,7 @@ hr {
   font-size: 13px;
   text-align: center;
   margin: 0px;
+  transition: all 0.3s ease-in;
 }
 
 .grid-item:hover {
@@ -577,10 +615,8 @@ footer img {
 fan form
 ============================================================================= */
 #form-header {
-  margin: auto;
-  width: 500px;
   font-family: calibri;
-  text-align: left;
+  margin-bottom: 10px;
 }
 
 /* center the form on the page */
@@ -630,7 +666,7 @@ textarea {
   font: 1em calibri;
   width: 300px;
   box-sizing: border-box;
-  border: 1px solid #999;
+  border: 1px solid #acacac;
   box-shadow: 1px 1px 4px #C0C0C0;
   outline: none;
 }
@@ -676,15 +712,10 @@ media queries
 
   header #dragged-into-div {
     width: 150px;
-    left: var(--less-900-margins);
   }
 
   header #dragged-into-div #header-img {
     width: 105px;
-  }
-
-  header nav {
-    right: var(--less-900-margins);
   }
 
   #about-section span.title {
@@ -696,10 +727,6 @@ media queries
     width: 70vw;
   }
 
-  #grid-section {
-    margin-left: var(--less-900-margins);
-    margin-right: var(--less-900-margins);
-  }
 
   #iframe-wrapper {
     width: 75%;
@@ -725,9 +752,6 @@ media queries
     width: 85px;
   }
 
-  header nav {
-    right: var(--less-700-margins);
-  }
 
   header nav a {
     padding-left: 10px;
@@ -747,8 +771,8 @@ media queries
   }
 
   #grid-section {
-    margin-left: var(--less-700-margins);
-    margin-right: var(--less-700-margins);
+    margin-left: 5%;
+    margin-right: 5%;
   }
 
   #modal-content-div {
@@ -801,7 +825,7 @@ media queries
   header nav a {
     font-size: calc(15px + 1.0vw);
     padding-left: 5px;
-    padding-right:  5px;
+    padding-right: 5px;
   }
 
   /* removing all special hovering styles for small devices */
