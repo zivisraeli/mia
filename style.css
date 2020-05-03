@@ -614,8 +614,13 @@ footer img {
 /* =============================================================================
 fan form
 ============================================================================= */
-#form-header {
+#fan-section {
+  margin-left: 10%;
+  margin-right: 10%;
   font-family: calibri;
+}
+
+#form-header {
   margin-bottom: 10px;
 }
 
@@ -627,7 +632,6 @@ form {
   border: 1px solid #cccccc;
   border-radius: 1em;
   background-color: #f8f8f8;
-  font-family: calibri;
 }
 
 /* place some top margin for all div's except the 1st one */
@@ -664,7 +668,7 @@ input[type=email],
 input[type=tel],
 textarea {
   font: 1em calibri;
-  width: 300px;
+  width: 75%;
   box-sizing: border-box;
   border: 1px solid #acacac;
   box-shadow: 1px 1px 4px #C0C0C0;
@@ -752,7 +756,6 @@ media queries
     width: 85px;
   }
 
-
   header nav a {
     padding-left: 10px;
     padding-right: 10px;
@@ -794,6 +797,11 @@ media queries
 
   #modal-container-div #next-btn {
     right: 0;
+  }
+
+  #fan-section {
+    margin-left: 5%;
+    margin-right: 5%;
   }
 
   /* the two footer spans are split veritically */
@@ -854,8 +862,15 @@ media queries
   }
 
   form {
-    width: 90vw;
+    width: 80vw;
     padding: 30px 10px;
+  }
+
+  input[type=text],
+  input[type=email],
+  input[type=tel],
+  textarea {
+    width: 95%;
   }
 
   form div {
