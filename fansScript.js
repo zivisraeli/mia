@@ -28,6 +28,61 @@ enableBreedField = (value) => {
 }
 
 // =============================================================================
+// Confirmation related functionality
+// ============================================================================= 
+let form = document.querySelector('form');
+let formConfirmBtn = document.getElementById("form-confirm-btn");
+let modalSection = document.getElementById("modal-section");
+let modalEditBtn = document.getElementById("modal-edit-btn");
+
+modalEditBtn.onclick = function () {
+  modalSection.style.display = "none";
+}
+
+formConfirmBtn.onclick = function () {
+  let isValidForm = form.reportValidity();
+  if (isValidForm) {
+
+    // Name
+    let nameInput = document.getElementById("name-input");
+    let nameDisplay = document.getElementById("name-display");
+    nameDisplay.innerHTML = nameInput.value;
+
+    // Email
+    let emailInput = document.getElementById("email-input");
+    let emailDisplay = document.getElementById("email-display");
+    emailDisplay.innerHTML = emailInput.value;
+
+    // Phone
+    let telInput = document.getElementById("tel-input");
+    let telDisplay = document.getElementById("tel-display");
+    telDisplay.innerHTML = telInput.value;
+
+    // Owner
+    let ownerStr = "No";
+    let ownerYes = document.getElementById("owner-yes");
+    if (ownerYes.checked === true) {
+      ownerStr = "Yes";
+    }
+    let ownerDisplay = document.getElementById("owner-display");
+    ownerDisplay.innerHTML = ownerStr;
+
+    // Breed
+    let breedInput = document.getElementById("dog-breed-input");
+    let breedDisplay = document.getElementById("dog-breed-display");
+    breedDisplay.innerHTML = breedInput.value;
+
+    // Comment
+    let commentInput = document.getElementById("comment-input");
+    let commentDisplay = document.getElementById("comment-display");
+    commentDisplay.innerHTML = commentInput.value;
+
+    modalSection.style.display = "block";
+  }
+}
+
+
+// =============================================================================
 // Initial function invocations
 // =============================================================================
 

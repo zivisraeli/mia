@@ -41,7 +41,7 @@
       </ul>
     </section>
     <section class="middle-section">
-      <form action="" method="post">
+      <form id="fan-form" action="" method="post">
         <div>
           <label for="name-input"><span class="required">*</span>Name:</label>
           <input type="text" id="name-input" required />
@@ -60,21 +60,38 @@
         <div>
           <label for="radio-btns-div">Dog Owner:</label>
           <div id="radio-btns-div">
-            <input type="radio" name="dog-owner" value="Yes">Yes
-            <input type="radio" name="dog-owner" value="No" checked />No
+            <input type="radio" name="dog-owner" value="Yes" id="owner-yes">Yes
+            <input type="radio" name="dog-owner" value="No" id="owner-no" checked />No
           </div>
         </div>
         <div>
           <label id="dog-breed-label">Dog Breed:</label>
-          <input type="text" id="dog-breed-input" required />
+          <input type="text" id="dog-breed-input" />
         </div>
         <div>
-          <label for="tel-input">Comment:</label>
-          <textarea type="text"></textarea>
+          <label for="comment-input">Comment:</label>
+          <textarea type="text" id="comment-input"></textarea>
         </div>
         <div class="button">
-          <button class="btn btn-primary" type="submit"><i class="fa fa-paw"></i>&nbsp;&nbsp;Submit</button>
+          <button id="form-confirm-btn" type="button"><i class="fa fa-paw"></i>&nbsp;&nbsp;Confirm</button>
         </div>
+
+        <section id="modal-section">
+          <div id="modal-content">
+            <span id="header">Please review your data. Submit or keep editing. </span>
+            <img id="border" src="images/border1.png"></img>
+            <label class="title">Names:</label><label class="value" id="name-display"></label>
+            <label class="title">Email:</label><label class="value" id="email-display"></label>
+            <label class="title">Telephone:</label><label class="value" id="tel-display"></label>
+            <label class="title">Dog Owner:</label><label class="value" id="owner-display"></label>
+            <label class="title">Dog Bread:</label><label class="value" id="dog-breed-display"></label>
+            <label class="title">Comment:</label><label class="value" id="comment-display"></label>
+
+            <button id="modal-submit-btn" class="btn btn-primary" type="submit"><i class="fa fa-paw"></i>&nbsp;&nbsp;Submit</button>
+            <button id="modal-edit-btn" class="btn btn-primary" type="button">&nbsp;&nbsp;Edit</button>
+          </div>
+        </section>
+
       </form>
     </section>
   </main>

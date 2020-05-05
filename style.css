@@ -284,7 +284,7 @@ ul {
   margin: 0px;
 }
 
-.customed-ul>li {
+.customed-ul > li {
   margin-bottom: 5px;
 }
 
@@ -326,7 +326,7 @@ the grid
   font-family: calibri;
 }
 
-#grid-section>#title {
+#grid-section > #title {
   font-size: 2vw;
 }
 
@@ -514,7 +514,7 @@ the modal
 }
 
 /* Modal image should be the width of the containing div */
-#modal-img-div>img {
+#modal-img-div > img {
   width: 100%;
   border: 1px solid black;
 }
@@ -628,14 +628,14 @@ fan form
 form {
   margin: auto;
   width: 400px;
-  padding: 40px;
+  padding: 30px;
   border: 1px solid #cccccc;
   border-radius: 1em;
   background-color: #f8f8f8;
 }
 
 /* place some top margin for all div's except the 1st one */
-form div+div {
+form > div + div {
   margin-top: 1em;
 }
 
@@ -644,7 +644,7 @@ form .required {
 }
 
 /* since label is an inline element, using inline-block would allow specifying width */
-form label {
+form > div > label {
   display: inline-block;
   width: 80px;
   text-align: right;
@@ -701,8 +701,97 @@ form .button {
 }
 
 form button {
-  height: 33px;
+  box-shadow: 0px 1px 0px 0px #fff6af;
+  background: linear-gradient(to bottom, #fefefe 20%, #ffab23 100%);
+  background-color: #ffec64;
+  border-radius: 6px;
+  border: 1px solid #a3a2a0;
+  cursor: pointer;
+  padding: 6px 10px;
+  outline: none;
 }
+
+form button:hover {
+  opacity: 1;
+  box-shadow: 2px 2px 3px #333333;
+  transition: var(--fast-transition);
+}
+
+/* the section is the entire viewport. 
+   it is darkened with some opacity so the modal popup stands out */
+#modal-section {
+  display: none;
+  position: fixed;
+  z-index: 1;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.6);
+}
+
+/* grid properties */
+#modal-content {
+  display: grid;
+  grid-template-columns: 50% 50%;
+  width: 40%;
+  margin: 20% auto;
+  padding: 10px;
+  border: 4px double black;
+  border-radius: 1em;
+  background-color: white;
+}
+
+/* grid properties */
+#modal-content #header {
+  grid-column-start: 1;
+  grid-column-end: 3;
+  grid-row-start: 1;
+  grid-row-end: 2;
+  font-size: 17px;
+}
+
+/* grid properties */
+#modal-content #border {
+  grid-column-start: 1;
+  grid-column-end: 3;
+  grid-row-start: 2;
+  grid-row-end: 3;
+  width: 90%;
+  margin: auto;
+}
+
+/* grid properties */
+#modal-content label.title {
+  justify-self: end;
+}
+
+/* grid properties */
+#modal-content label.value {
+  justify-self: start;
+  font-style: italic;
+  padding-left: 5px;
+}
+
+/* grid properties */
+#modal-content .btn {
+  margin-top: 10px;
+  margin-bottom: 10px;
+  width: 50%;
+}
+
+/* grid properties */
+#modal-content #modal-submit-btn {
+  justify-self: end;
+}
+
+/* grid properties */
+#modal-content #modal-edit-btn {
+  justify-self: start;
+  margin-left: 10px;
+}
+
+
 
 /* =============================================================================
 media queries
@@ -731,6 +820,9 @@ media queries
     width: 70vw;
   }
 
+  #modal-content {
+    width: 60%;
+  }
 
   #iframe-wrapper {
     width: 75%;
@@ -883,6 +975,11 @@ media queries
 
   form #phone-comment span {
     margin-left: 0px;
+  }
+
+
+  #modal-content {
+    width: 80%;
   }
 
   footer {
