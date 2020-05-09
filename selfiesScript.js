@@ -366,6 +366,40 @@ window.addEventListener('load', (event) => {
 });
 
 // =============================================================================
+// - Intersection Observer API.
+// - The IntersectionObserver object takes a callback-function and 
+//   the options parameter which is an object that can contain 
+//   other values beside 'threshold' such as 'root', 'rootMargin', etc.
+// - The degree of intersection between the target element and the root is the 
+//   intersection ratio (threshold).
+// =============================================================================
+var observer = new IntersectionObserver(function(entries) {
+  for (entry of entries) {
+
+    if (entry['isIntersecting'] === true) {
+      console.log(entry);
+      if (entry['intersectionRatio'] >= 0.9) {
+        document.getElementById(entry.target.id).style.filter = "none";
+      } else if (entry['intersectionRatio'] < 0.9) {
+        document.getElementById(entry.target.id).style.filter = "blur(4px) grayscale(100%)";
+      }
+    }
+  }
+}, { threshold: [0, 0.9] });
+
+attachImagesToObserver = () => {
+  for (item of state.gridItems) {
+    try {
+      let idStr = '#' + item.id;
+      let theElem = document.querySelector(idStr);
+      observer.observe(theElem);
+    } catch (err) {
+      console.log(err);
+    }
+  }
+}
+
+// =============================================================================
 // Initial function invocations
 // =============================================================================
 
@@ -383,3 +417,6 @@ readSortCookie();
 
 // Now we are ready to render the grid.
 renderGrid();
+
+// The images will blur when go out of focus
+attachImagesToObserver();
