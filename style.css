@@ -394,7 +394,7 @@ hr {
   grid-gap: 2rem;
 }
 
-/* it's relative so the heart can be placed absolutely */
+/* it's relative, so the heart can be placed absolutely */
 .grid-item {
   position: relative;
   background-color: var(--gray-color-grid);
@@ -403,6 +403,7 @@ hr {
   text-align: center;
   margin: 0px;
   transition: all 0.5s linear;
+  filter: blur(4px) grayscale(100%);
 }
 
 .grid-item:hover {

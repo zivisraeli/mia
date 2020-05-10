@@ -390,8 +390,7 @@ var observer = new IntersectionObserver(function(entries) {
 attachImagesToObserver = () => {
   for (item of state.gridItems) {
     try {
-      let idStr = '#' + item.id;
-      let theElem = document.querySelector(idStr);
+      let theElem = document.getElementById(item.id);
       observer.observe(theElem);
     } catch (err) {
       console.log(err);
