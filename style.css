@@ -966,6 +966,10 @@ media queries
     width: 95%;
   }
 
+  form > div > label {
+    text-align: left;
+  }
+
   form div {
     text-align: left;
   }
